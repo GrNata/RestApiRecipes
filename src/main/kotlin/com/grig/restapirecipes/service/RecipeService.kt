@@ -78,8 +78,7 @@ class RecipeService(
 
         request.ingredients.forEach { dto ->
             val ingredient = ingredientRepository.findById(dto.ingredientId)
-//            val ingredient = ingredientRepository.findById(dto.id)
-                .orElseThrow { RuntimeException("Ingredient not found: ${dto.ingredientId}") }
+                .orElseThrow { IllegalArgumentException("Ingredient not found: ${dto.ingredientId}") }
             recipe.recipeIngredients.add(
                 RecipeIngredient(
                     recipe = recipe,
