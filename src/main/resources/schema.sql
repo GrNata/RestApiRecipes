@@ -1,0 +1,43 @@
+DROP TABLE IF EXISTS recipe_ingredient CASCADE;
+DROP TABLE IF EXISTS recipe_category CASCADE;
+DROP TABLE IF EXISTS cooking_step CASCADE;
+DROP TABLE IF EXISTS ingredient CASCADE;
+DROP TABLE IF EXISTS category CASCADE;
+DROP TABLE IF EXISTS recipe CASCADE;
+
+CREATE TABLE category (
+                          id BIGSERIAL PRIMARY KEY,
+                          name VARCHAR(255) NOT NULL UNIQUE
+);
+
+CREATE TABLE ingredient (
+                            id BIGSERIAL PRIMARY KEY,
+                            name VARCHAR(255) NOT NULL UNIQUE
+);
+
+CREATE TABLE recipe (
+                        id BIGSERIAL PRIMARY KEY,
+                        name VARCHAR(255) NOT NULL,
+                        description TEXT,
+                        image VARCHAR(500)
+);
+
+CREATE TABLE recipe_category (
+                                 recipe_id BIGINT NOT NULL REFERENCES recipe(id) ON DELETE CASCADE,
+                                 category_id BIGINT NOT NULL REFERENCES category(id) ON DELETE CASCADE,
+                                 PRIMARY KEY (recipe_id, category_id)
+);
+
+CREATE TABLE recipe_ingredient (
+                                   recipe_id BIGINT NOT NULL REFERENCES recipe(id) ON DELETE CASCADE,
+                                   ingredient_id BIGINT NOT NULL REFERENCES ingredient(id) ON DELETE CASCADE,
+                                   amount VARCHAR(255),
+                                   PRIMARY KEY (recipe_id, ingredient_id)
+);
+
+CREATE TABLE cooking_step (
+                              id BIGSERIAL PRIMARY KEY,
+                              recipe_id BIGINT NOT NULL REFERENCES recipe(id) ON DELETE CASCADE,
+                              step_number INT NOT NULL,
+                              description TEXT NOT NULL
+);
