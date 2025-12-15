@@ -1,17 +1,19 @@
 package com.grig.restapirecipes.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 import java.io.Serializable
 
 @Entity
 @Table(name = "recipe_ingredient")
-data class RecipeIngredient(
+class RecipeIngredient(
     @EmbeddedId
     val id: RecipeIngredientId = RecipeIngredientId(),
 
     @ManyToOne
     @MapsId("recipeId") // связывает с id.recipeId
     @JoinColumn(name = "recipe_id")
+    @JsonIgnore     // избегаем рекурсию
     val recipe: Recipe,
 
     @ManyToOne
@@ -20,11 +22,19 @@ data class RecipeIngredient(
     val ingredient: Ingredient,
 
     val amount: String?
-)
+) {
+//    ????
+    constructor(recipe: Recipe, ingredient: Ingredient, amount: String?) : this(
+        id = RecipeIngredientId(recipe.id ?: 0, ingredient.id ?: 0),
+        recipe = recipe,
+        ingredient = ingredient,
+        amount = amount
+    )
+}
 
 
 @Embeddable
-data class RecipeIngredientId(
+class RecipeIngredientId(
     @Column(name = "recipe_id")
     val recipeId: Long = 0,
 

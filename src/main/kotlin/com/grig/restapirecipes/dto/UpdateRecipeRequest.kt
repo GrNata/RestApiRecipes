@@ -1,0 +1,15 @@
+package com.grig.restapirecipes.dto
+
+data class UpdateRecipeRequest(
+    val name: String?,
+    val description: String?,
+    val image: String?,
+    val categoryIds: List<Long>?,
+    val ingredients: List<UpdateRecipeIngredientRequest>?,
+    val steps: List<String>?
+)
+
+data class UpdateRecipeIngredientRequest(
+    val ingredientId: Long,
+    val amount: String
+)

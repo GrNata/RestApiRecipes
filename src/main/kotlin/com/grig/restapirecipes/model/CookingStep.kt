@@ -12,7 +12,7 @@ import jakarta.persistence.Table
 
 @Entity
 @Table(name = "cooking_step")
-data class CookingStep(
+class CookingStep(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -27,4 +27,11 @@ data class CookingStep(
     @JoinColumn(name = "recipe_id", nullable = false)
     val recipe: Recipe
 
-)
+) {
+    constructor(recipe: Recipe, stepNumber: Int, description: String) : this(
+        id = null,
+        recipe = recipe,
+        stepNumber = stepNumber,
+        description = description
+    )
+}

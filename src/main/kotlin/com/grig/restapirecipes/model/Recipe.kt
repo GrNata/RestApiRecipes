@@ -4,7 +4,7 @@ import jakarta.persistence.*
 
 @Entity
 @Table(name = "recipe")
-data class Recipe(
+class Recipe(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
