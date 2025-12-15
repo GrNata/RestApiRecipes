@@ -7,12 +7,14 @@ DROP TABLE IF EXISTS recipe CASCADE;
 
 CREATE TABLE category (
                           id BIGSERIAL PRIMARY KEY,
-                          name VARCHAR(255) NOT NULL UNIQUE
+                          name VARCHAR(255) NOT NULL UNIQUE,
+                          image VARCHAR(500)
 );
 
 CREATE TABLE ingredient (
                             id BIGSERIAL PRIMARY KEY,
-                            name VARCHAR(255) NOT NULL UNIQUE
+                            name VARCHAR(255) NOT NULL UNIQUE,
+                            unit VARCHAR(50)
 );
 
 CREATE TABLE recipe (

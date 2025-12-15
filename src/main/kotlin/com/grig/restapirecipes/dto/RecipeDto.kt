@@ -5,7 +5,7 @@ data class RecipeDto (
     val name: String,
     val description: String?,
     val image: String?,
-    val categories: List<String>,
-    val ingredients: List<String>,
+    val categories: List<CategoryDto>,
+    val ingredients: List<IngredientWithAmountDto>,
     val steps: List<String>
 )

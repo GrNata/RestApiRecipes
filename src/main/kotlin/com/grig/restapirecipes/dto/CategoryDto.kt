@@ -3,5 +3,6 @@ package com.grig.restapirecipes.dto
 
 data class CategoryDto(
     val id: Long,
-    val name: String
+    val name: String,
+    val image: String?
 )

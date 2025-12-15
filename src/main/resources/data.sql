@@ -3,15 +3,15 @@ INSERT INTO category (name) VALUES
                                 ('Салаты'),
                                 ('Десерты');
 
-INSERT INTO ingredient (name) VALUES
-                                  ('Картофель'),
-                                  ('Морковь'),
-                                  ('Свекла'),
-                                  ('Мясо'),
-                                  ('Яйца'),
-                                  ('Мука'),
-                                  ('Молоко'),
-                                  ('Сахар');
+INSERT INTO ingredient (id, name, unit) VALUES
+                                  (1,'Картофель', 'г'),
+                                  (2,'Морковь', 'г'),
+                                  (3,'Свекла', 'г'),
+                                  (4,'Мясо', 'г'),
+                                  (5,'Яйца', 'шт'),
+                                  (6,'Мука', 'г'),
+                                  (7,'Молоко', 'мл'),
+                                  (8,'Сахар', 'г');
 
 INSERT INTO recipe (name, description, image) VALUES
                                                   ('Оливье', 'Классический новогодний салат', 'https://example.com/images/olivier.jpg'),

@@ -15,5 +15,8 @@ data class Ingredient(
     val id: Long? = null,
 
     @Column(nullable = false)
-    val name: String
+    val name: String,
+
+    @Column(nullable = false)
+    val unit: String    //  кг, г, мл, шт, ст.л и т.д.
 )

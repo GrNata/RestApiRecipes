@@ -10,5 +10,8 @@ data class Category(
     val id: Long? = null,
 
     @Column(nullable = false, unique = true)
-    val name: String
+    val name: String,
+
+    @Column
+    val image: String? = null
 )
