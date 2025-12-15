@@ -16,6 +16,7 @@ class RecipeService(
 
     fun getAllRecipes() : List<RecipeDto>  =
         recipeRepository.findAll().map { recipe ->
+//            УБРАТЬ !!
             val ingredients = recipeIngredientRepository.findIngredients(recipe.id!!)
             val steps = stepRepository.findSteps(recipe.id!!)
             RecipeMapper.toDto(recipe, ingredients, steps)
@@ -28,6 +29,26 @@ class RecipeService(
         val steps = stepRepository.findSteps(id)
 
         return RecipeMapper.toDto(recipe, ingredients, steps)
+    }
+
+    fun searchRecipe(
+        name: String?,
+        ingredient: String?
+    ) : List<RecipeDto> {
+        val recipes = when {
+            !name.isNullOrBlank() ->
+                recipeRepository.searchByName(name)
+            !ingredient.isNullOrBlank() ->
+                recipeRepository.searchByIngredient(ingredient)
+
+            else ->
+                recipeRepository.findAll()
+        }
+        return recipes.map { recipe ->
+            val ingredients = recipeIngredientRepository.findIngredients(requireNotNull(recipe.id))
+            val steps = stepRepository.findSteps(requireNotNull(recipe.id))
+            RecipeMapper.toDto(recipe, ingredients, steps)
+        }
     }
 
 }
