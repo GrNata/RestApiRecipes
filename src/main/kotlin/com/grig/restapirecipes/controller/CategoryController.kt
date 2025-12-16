@@ -24,6 +24,7 @@ class CategoryController(
 
 
 //    с пагинацией, сортировкой и фильтром
+//      @Operation(summary = "...") описывает эндпоинт в Swagger UI.
     @Operation(summary = "Get category with optional search, padination and sorting")
     @GetMapping
     fun getCategories(

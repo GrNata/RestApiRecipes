@@ -23,7 +23,9 @@ class IngredientController(
     @GetMapping("/{id}")
     fun getById(id: Long) : IngredientDto = ingredientService.getById(id)
 
+
 //    с пагинацией, сортировкой и фильтром
+//      @Operation(summary = "...") описывает эндпоинт в Swagger UI.
     @Operation(summary = "Get ingredients with optional search, pagination and sorting")
     @GetMapping
     fun getIngredients(
