@@ -5,6 +5,7 @@ import com.grig.restapirecipes.dto.RecipeDto
 import com.grig.restapirecipes.dto.UpdateRecipeRequest
 import com.grig.restapirecipes.mapper.IngredientMapper
 import com.grig.restapirecipes.mapper.RecipeMapper
+import com.grig.restapirecipes.model.Recipe
 import com.grig.restapirecipes.service.RecipeService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
@@ -27,13 +28,20 @@ class RecipeController(
         return ResponseEntity.ok(recipeDto)
     }
 
-//    Вернет рецепты отфильтрованные по названию или инградиенту, иначе все рецепты!!!
+////    Вернет рецепты отфильтрованные по названию или инградиенту, иначе все рецепты!!!
+//    @GetMapping
+//    fun searchRecipes(
+//        @RequestParam(required = false) name: String?,
+//        @RequestParam(required = false) ingredient: String?
+//    ) : List<RecipeDto> =
+//        recipeService.searchRecipe(name, ingredient)
+
+
     @GetMapping
-    fun searchrecipes(
+    fun search(
         @RequestParam(required = false) name: String?,
         @RequestParam(required = false) ingredient: String?
-    ) : List<RecipeDto> =
-        recipeService.searchRecipe(name, ingredient)
+    ) : List<RecipeDto> = recipeService.search(name, ingredient)
 
 
     @PostMapping

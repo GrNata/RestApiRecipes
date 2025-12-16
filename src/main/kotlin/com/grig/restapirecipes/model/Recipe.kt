@@ -10,6 +10,7 @@ class Recipe(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
+//    @Column(nullable = false, columnDefinition = "VARCHAR(255)")
     @Column(nullable = false)
     var name: String,
 
@@ -59,3 +60,6 @@ class Recipe(
 //recipeRepository.delete(recipe)       Удаляет рецепт → автоматически удаляет все RecipeIngredient
 
 // Если есть orphanRemoval = true — НЕ надо вручную удалять детей через репозиторий
+//Если ты удаляешь RecipeIngredient из recipe.recipeIngredients, JPA автоматически выполнит DELETE по таблице recipe_ingredient.
+//	•	Если бы orphanRemoval = false, удаление из коллекции не удаляло бы запись из базы — нужно было бы делать repository.delete(...) вручную.
+//	•	Работает только для @OneToMany или @OneToOne, не для @ManyToMany.

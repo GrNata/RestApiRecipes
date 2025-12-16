@@ -13,6 +13,7 @@ import com.grig.restapirecipes.repository.IngredientRepository
 import com.grig.restapirecipes.repository.RecipeIngredientRepository
 import com.grig.restapirecipes.repository.RecipeRepository
 import com.grig.restapirecipes.repository.StepRepository
+import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -43,25 +44,27 @@ class RecipeService(
         return RecipeMapper.toDto(recipe, ingredients, steps)
     }
 
-    fun searchRecipe(
-        name: String?,
-        ingredient: String?
-    ) : List<RecipeDto> {
-        val recipes = when {
-            !name.isNullOrBlank() ->
-                recipeRepository.searchByName(name)
-            !ingredient.isNullOrBlank() ->
-                recipeRepository.searchByIngredient(ingredient)
 
-            else ->
-                recipeRepository.findAll()
+    fun search(name: String?, ingredient: String?) : List<RecipeDto> {
+        var spec: Specification<Recipe>? = null
+
+        if (!name.isNullOrBlank()) {
+            spec = RecipeSpecification.hasName(name)
         }
+        if (!ingredient.isNullOrBlank()) {
+            spec = if (spec != null) spec.and(RecipeSpecification.hasIngredient(ingredient))
+                   else RecipeSpecification.hasIngredient(ingredient)
+        }
+        val recipes = if (spec != null) recipeRepository.findAll(spec)
+                      else recipeRepository.findAll()
         return recipes.map { recipe ->
             val ingredients = recipeIngredientRepository.findIngredients(requireNotNull(recipe.id))
             val steps = stepRepository.findSteps(requireNotNull(recipe.id))
             RecipeMapper.toDto(recipe, ingredients, steps)
         }
     }
+
+
 
     @Transactional
     fun createRecipe(request: CreateRecipeRequest) : Recipe {
@@ -146,6 +149,28 @@ class RecipeService(
 
         recipeRepository.delete(recipe)
     }
+
+
+    //  Был - либо имя рецепта, либо имя ингредиента
+//    fun searchRecipe(
+//        name: String?,
+//        ingredient: String?
+//    ) : List<RecipeDto> {
+//        val recipes = when {
+//            !name.isNullOrBlank() ->
+//                recipeRepository.searchByName(name)
+//            !ingredient.isNullOrBlank() ->
+//                recipeRepository.searchByIngredient(ingredient)
+//
+//            else ->
+//                recipeRepository.findAll()
+//        }
+//        return recipes.map { recipe ->
+//            val ingredients = recipeIngredientRepository.findIngredients(requireNotNull(recipe.id))
+//            val steps = stepRepository.findSteps(requireNotNull(recipe.id))
+//            RecipeMapper.toDto(recipe, ingredients, steps)
+//        }
+//    }
 
 
 }

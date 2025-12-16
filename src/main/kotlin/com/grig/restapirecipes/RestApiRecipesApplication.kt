@@ -9,3 +9,7 @@ class RestApiRecipesApplication
 fun main(args: Array<String>) {
     runApplication<RestApiRecipesApplication>(*args)
 }
+
+
+//      Swagger:
+//  http://localhost:8080/swagger-ui/index.html#/recipe-controller/updateRecipe
