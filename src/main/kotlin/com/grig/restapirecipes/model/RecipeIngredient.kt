@@ -9,28 +9,44 @@ import java.io.Serializable
 class RecipeIngredient(
     @EmbeddedId
     val id: RecipeIngredientId = RecipeIngredientId(),
+//    val id: RecipeIngredientId,
 
-    @ManyToOne
+//    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("recipeId") // связывает с id.recipeId
     @JoinColumn(name = "recipe_id")
     @JsonIgnore     // избегаем рекурсию
     val recipe: Recipe,
 
-    @ManyToOne
+//    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("ingredientId") // связывает с id.ingredientId
     @JoinColumn(name = "ingredient_id")
     val ingredient: Ingredient,
 
     val amount: String?
+
 ) {
-//    ????
+    /** ✅ УДОБНЫЙ фабричный конструктор */
     constructor(recipe: Recipe, ingredient: Ingredient, amount: String?) : this(
-        id = RecipeIngredientId(recipe.id ?: 0, ingredient.id ?: 0),
+        id = RecipeIngredientId(
+            recipeId = requireNotNull(recipe.id),
+            ingredientId = requireNotNull(ingredient.id)
+        ),
         recipe = recipe,
         ingredient = ingredient,
         amount = amount
     )
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is RecipeIngredient) return false
+        return id ==other.id
+    }
+
+    override fun hashCode(): Int = id.hashCode()
 }
+
 
 
 @Embeddable

@@ -61,4 +61,14 @@ class RecipeController(
         return ResponseEntity.ok(dto)
     }
 
+//    Что будет происходить:
+//	•	Если рецепт с таким id есть — удаляется, возвращается 204.
+//	•	Если рецепта нет — выбрасывается RecipeNotFoundException, который ловит GlobalExceptionHandler и возвращает красивый JSON 404.
+//	•	Всё выполняется в одной транзакции — если что-то пойдёт не так, откатится автоматически.
+    @DeleteMapping("/{id}")
+    fun deleteRecipe(@PathVariable id: Long) : ResponseEntity<Unit> {
+        recipeService.deleteRecipe(id)
+        return ResponseEntity.noContent().build()    // 204 No Content
+    }
+
 }

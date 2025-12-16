@@ -27,13 +27,13 @@ class Recipe(
     )
     var categories: MutableSet<Category> = mutableSetOf(),
 
-    @ManyToMany
-    @JoinTable(
-        name = "recipe_ingredient",
-        joinColumns = [JoinColumn(name = "recipe_id")],
-        inverseJoinColumns = [JoinColumn(name = "ingredient_id")]
-    )
-    var ingredients: MutableSet<Ingredient> = mutableSetOf(),
+//    @ManyToMany
+//    @JoinTable(
+//        name = "recipe_ingredient",
+//        joinColumns = [JoinColumn(name = "recipe_id")],
+//        inverseJoinColumns = [JoinColumn(name = "ingredient_id")]
+//    )
+//    var ingredients: MutableSet<Ingredient> = mutableSetOf(),
 
     @OneToMany(
         mappedBy = "recipe",
@@ -43,6 +43,19 @@ class Recipe(
     @OrderBy("stepNumber ASC")
     var steps: MutableList<CookingStep> = mutableListOf(),
 
-    @OneToMany(mappedBy = "recipe", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(
+        mappedBy = "recipe",
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true    // orphanRemoval = true — это автоматическое и безопасное удаление дочерних записей, когда ты убираешь их из коллекции родителя
+    )
     val recipeIngredients: MutableSet<RecipeIngredient> = mutableSetOf()
 )
+
+//  orphanRemoval = true
+//  Что Hibernate делает:
+//Действие                              Результат
+//recipe.recipeIngredients.clear()      Hibernate делает DELETE FROM recipe_ingredient ...
+//recipe.recipeIngredients.remove(x)    Удаляет строку в БД, не просто из памяти
+//recipeRepository.delete(recipe)       Удаляет рецепт → автоматически удаляет все RecipeIngredient
+
+// Если есть orphanRemoval = true — НЕ надо вручную удалять детей через репозиторий

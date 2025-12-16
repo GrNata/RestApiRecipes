@@ -31,8 +31,8 @@ import java.time.LocalDateTime
 class GlobalExceptionHandler {
 
     // 404 Not Found
-    @ExceptionHandler(NotFoundException::class)
-    fun handlerNotFound(ex: NotFoundException) : ResponseEntity<Map<String, Any?>> {
+    @ExceptionHandler(RecipeNotFoundException::class)
+    fun handlerNotFound(ex: RecipeNotFoundException) : ResponseEntity<Map<String, Any?>> {
         val body = mapOf(
             "status" to 404,
             "error" to "Not Found",

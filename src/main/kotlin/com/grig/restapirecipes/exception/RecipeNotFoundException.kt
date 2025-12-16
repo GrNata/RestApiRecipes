@@ -5,4 +5,4 @@ import org.springframework.web.bind.annotation.ResponseStatus
 
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-class NotFoundException(message: String) : RuntimeException(message)
+class RecipeNotFoundException(message: String) : RuntimeException(message)

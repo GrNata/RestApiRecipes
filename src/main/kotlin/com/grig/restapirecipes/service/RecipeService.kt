@@ -3,21 +3,18 @@ package com.grig.restapirecipes.service
 import com.grig.restapirecipes.dto.CreateRecipeRequest
 import com.grig.restapirecipes.dto.RecipeDto
 import com.grig.restapirecipes.dto.UpdateRecipeRequest
-import com.grig.restapirecipes.exception.NotFoundException
+import com.grig.restapirecipes.exception.RecipeNotFoundException
 import com.grig.restapirecipes.mapper.RecipeMapper
 import com.grig.restapirecipes.model.CookingStep
 import com.grig.restapirecipes.model.Recipe
 import com.grig.restapirecipes.model.RecipeIngredient
-import com.grig.restapirecipes.model.RecipeIngredientId
 import com.grig.restapirecipes.repository.CategoryRepository
 import com.grig.restapirecipes.repository.IngredientRepository
 import com.grig.restapirecipes.repository.RecipeIngredientRepository
 import com.grig.restapirecipes.repository.RecipeRepository
 import com.grig.restapirecipes.repository.StepRepository
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.web.bind.annotation.PutMapping
 
 @Service
 class RecipeService(
@@ -39,7 +36,7 @@ class RecipeService(
     fun getRecipeById(id: Long): RecipeDto {
         val recipe = recipeRepository.findRecipeBase(id)
 //            ?: throw RuntimeException("Recipe id = ${id} not found")
-            ?: throw NotFoundException("Recipe id = ${id} not found")
+            ?: throw RecipeNotFoundException("Recipe id = ${id} not found")
         val ingredients = recipeIngredientRepository.findIngredients(id)
         val steps = stepRepository.findSteps(id)
 
@@ -81,7 +78,7 @@ class RecipeService(
         request.ingredients.forEach { dto ->
             val ingredient = ingredientRepository.findById(dto.ingredientId)
 //                .orElseThrow { IllegalArgumentException("Ingredient not found: ${dto.ingredientId}") }
-                .orElseThrow { NotFoundException("Ingredient not found: ${dto.ingredientId}") }
+                .orElseThrow { RecipeNotFoundException("Ingredient not found: ${dto.ingredientId}") }
             recipe.recipeIngredients.add(
                 RecipeIngredient(
                     recipe = recipe,
@@ -106,7 +103,7 @@ class RecipeService(
     fun updateRecipe(id: Long, request: UpdateRecipeRequest) : Recipe {
         val recipe = recipeRepository.findById(id)
 //            .orElseThrow { RuntimeException("Recipe is not found") }
-            .orElseThrow { NotFoundException("Recipe is not found") }
+            .orElseThrow { RecipeNotFoundException("Recipe is not found") }
 
         request.name?.let { recipe.name = it }
         request.description?.let { recipe.description = it }
@@ -122,7 +119,7 @@ class RecipeService(
             it.forEach { dto ->
                 val ingredient = ingredientRepository.findById(dto.ingredientId)
 //                    .orElseThrow { RuntimeException("Ingredient not found: ${dto.ingredientId}") }
-                    .orElseThrow { NotFoundException("Ingredient not found: ${dto.ingredientId}") }
+                    .orElseThrow { RecipeNotFoundException("Ingredient not found: ${dto.ingredientId}") }
                 recipe.recipeIngredients.add(RecipeIngredient(recipe, ingredient, dto.amount))
             }
         }
@@ -136,6 +133,19 @@ class RecipeService(
 
             return recipeRepository.save(recipe)
         }
+
+    @Transactional
+    fun deleteRecipe(id: Long) {
+        val recipe = recipeRepository.findById(id)
+            .orElseThrow { RecipeNotFoundException("Recipe with id $id not found") }
+
+//        // ВАЖНО
+//        recipe.recipeIngredients.clear()
+//        recipe.steps.clear()
+//        recipe.categories.clear()
+
+        recipeRepository.delete(recipe)
+    }
 
 
 }
