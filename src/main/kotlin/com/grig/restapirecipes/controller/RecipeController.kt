@@ -8,6 +8,7 @@ import com.grig.restapirecipes.mapper.RecipeMapper
 import com.grig.restapirecipes.model.Recipe
 import com.grig.restapirecipes.service.RecipeService
 import jakarta.validation.Valid
+import org.springframework.data.domain.Page
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -37,7 +38,7 @@ class RecipeController(
 //        recipeService.searchRecipe(name, ingredient)
 
 
-    @GetMapping
+    @GetMapping("/search")
     fun search(
         @RequestParam(required = false) name: String?,
         @RequestParam(required = false) ingredient: String?
@@ -77,6 +78,20 @@ class RecipeController(
     fun deleteRecipe(@PathVariable id: Long) : ResponseEntity<Unit> {
         recipeService.deleteRecipe(id)
         return ResponseEntity.noContent().build()    // 204 No Content
+    }
+
+    //    Pagination + Sort
+//    @GetMapping("/recipes")
+    @GetMapping
+    fun searchPecipes(
+        @RequestParam(required = false) name : String?,
+        @RequestParam(required = false) ingredient: String?,
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "10") size: Int,
+        @RequestParam(defaultValue = "name") sortBy: String,
+        @RequestParam(defaultValue = "ASC") direction: String
+    ) : Page<RecipeDto> {
+        return recipeService.searchRecipes(name, ingredient, page, size, sortBy, direction)
     }
 
 }
