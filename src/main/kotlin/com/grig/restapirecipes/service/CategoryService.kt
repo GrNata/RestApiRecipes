@@ -1,6 +1,6 @@
 package com.grig.restapirecipes.service
 
-import com.grig.restapirecipes.dto.CategoryDto
+import com.grig.restapirecipes.dto.response.CategoryDto
 import com.grig.restapirecipes.repository.CategoryRepository
 import org.springframework.stereotype.Service
 import com.grig.restapirecipes.exception.RecipeNotFoundException

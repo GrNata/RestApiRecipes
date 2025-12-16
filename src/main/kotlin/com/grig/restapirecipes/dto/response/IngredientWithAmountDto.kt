@@ -1,4 +1,4 @@
-package com.grig.restapirecipes.dto
+package com.grig.restapirecipes.dto.response
 
 data class IngredientWithAmountDto(
     val id: Long,

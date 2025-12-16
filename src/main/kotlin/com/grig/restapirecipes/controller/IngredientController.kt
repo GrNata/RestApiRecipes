@@ -1,6 +1,6 @@
 package com.grig.restapirecipes.controller
 
-import com.grig.restapirecipes.dto.IngredientDto
+import com.grig.restapirecipes.dto.response.IngredientDto
 import com.grig.restapirecipes.repository.IngredientRepository
 import com.grig.restapirecipes.service.IngredientService
 import io.swagger.v3.oas.annotations.Operation

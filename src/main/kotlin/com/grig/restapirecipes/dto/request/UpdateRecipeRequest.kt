@@ -1,4 +1,4 @@
-package com.grig.restapirecipes.dto
+package com.grig.restapirecipes.dto.request
 
 data class UpdateRecipeRequest(
     val name: String?,

@@ -1,4 +1,4 @@
-package com.grig.restapirecipes.dto
+package com.grig.restapirecipes.dto.response
 
 import io.swagger.v3.oas.annotations.media.Schema
 

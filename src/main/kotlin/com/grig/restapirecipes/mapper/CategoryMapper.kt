@@ -1,6 +1,6 @@
 package com.grig.restapirecipes.mapper
 
-import com.grig.restapirecipes.dto.CategoryDto
+import com.grig.restapirecipes.dto.response.CategoryDto
 import com.grig.restapirecipes.model.Category
 import org.springframework.stereotype.Component
 

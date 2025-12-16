@@ -45,6 +45,26 @@ class RecipeIngredient(
     }
 
     override fun hashCode(): Int = id.hashCode()
+
+//    в тестах
+    companion object {
+    /**
+     * ✔ Безопасная фабрика
+     * ✔ НЕ требует recipe.id
+     * ✔ Hibernate сам заполнит EmbeddedId через @MapsId
+     */
+        fun of(
+            recipe: Recipe,
+            ingredient: Ingredient,
+            amount: String?
+        ) : RecipeIngredient {
+            return RecipeIngredient(
+                recipe = recipe,
+                ingredient = ingredient,
+                amount = amount
+            )
+        }
+    }
 }
 
 

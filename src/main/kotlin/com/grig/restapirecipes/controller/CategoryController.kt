@@ -1,6 +1,6 @@
 package com.grig.restapirecipes.controller
 
-import com.grig.restapirecipes.dto.CategoryDto
+import com.grig.restapirecipes.dto.response.CategoryDto
 import com.grig.restapirecipes.repository.CategoryRepository
 import com.grig.restapirecipes.service.CategoryService
 import io.swagger.v3.oas.annotations.Operation

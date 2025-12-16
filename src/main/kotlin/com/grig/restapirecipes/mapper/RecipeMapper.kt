@@ -1,8 +1,8 @@
 package com.grig.restapirecipes.mapper
 
-import com.grig.restapirecipes.dto.CategoryDto
-import com.grig.restapirecipes.dto.IngredientWithAmountDto
-import com.grig.restapirecipes.dto.RecipeDto
+import com.grig.restapirecipes.dto.response.CategoryDto
+import com.grig.restapirecipes.dto.response.IngredientWithAmountDto
+import com.grig.restapirecipes.dto.response.RecipeDto
 import com.grig.restapirecipes.model.CookingStep
 import com.grig.restapirecipes.model.Recipe
 import com.grig.restapirecipes.model.RecipeIngredient

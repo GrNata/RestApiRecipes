@@ -1,8 +1,8 @@
 package com.grig.restapirecipes.service
 
-import com.grig.restapirecipes.dto.CreateRecipeRequest
-import com.grig.restapirecipes.dto.RecipeDto
-import com.grig.restapirecipes.dto.UpdateRecipeRequest
+import com.grig.restapirecipes.dto.request.CreateRecipeRequest
+import com.grig.restapirecipes.dto.response.RecipeDto
+import com.grig.restapirecipes.dto.request.UpdateRecipeRequest
 import com.grig.restapirecipes.exception.RecipeNotFoundException
 import com.grig.restapirecipes.mapper.RecipeMapper
 import com.grig.restapirecipes.model.CookingStep
@@ -13,14 +13,12 @@ import com.grig.restapirecipes.repository.IngredientRepository
 import com.grig.restapirecipes.repository.RecipeIngredientRepository
 import com.grig.restapirecipes.repository.RecipeRepository
 import com.grig.restapirecipes.repository.StepRepository
-import com.grig.restapirecipes.service.RecipeSpecification.hasName
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Sort
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.math.BigInteger
 
 @Service
 class RecipeService(
@@ -171,12 +169,18 @@ class RecipeService(
             if (direction.uppercase() == "ASC") Sort.by(sortBy).ascending()
                   else Sort.by(sortBy).descending()
         )
+
         val combinedSpec: Specification<Recipe>? = listOfNotNull(
             name?.takeIf { it.isNotBlank() }?.let { RecipeSpecification.hasName(it) },
             ingredient?.takeIf { it.isNotBlank() }?.let { RecipeSpecification.hasIngredient(it) }
         ).reduceOrNull { acc, s -> acc.and(s) }
 
-        val recipesPage: Page<Recipe> = recipeRepository.findAll(combinedSpec as Specification<Recipe>, pageable)
+//        val recipesPage: Page<Recipe> = recipeRepository.findAll(combinedSpec as Specification<Recipe>, pageable)
+        val recipesPage = if (combinedSpec != null) {
+            recipeRepository.findAll(combinedSpec, pageable)
+        } else {
+            recipeRepository.findAll(pageable)
+        }
 
         return recipesPage.map { recipe ->
             val ingredients = recipeIngredientRepository.findIngredients(requireNotNull(recipe.id))

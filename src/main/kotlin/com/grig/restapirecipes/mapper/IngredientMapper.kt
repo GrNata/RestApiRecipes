@@ -1,6 +1,6 @@
 package com.grig.restapirecipes.mapper
 
-import com.grig.restapirecipes.dto.IngredientDto
+import com.grig.restapirecipes.dto.response.IngredientDto
 import com.grig.restapirecipes.model.Ingredient
 import org.springframework.stereotype.Component
 

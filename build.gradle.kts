@@ -47,14 +47,17 @@ dependencies {
 //    testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
 //    testImplementation("org.springframework.boot:spring-boot-starter-validation-test")
 //    testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+    }
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.3.1")
 //    (Опционально) JUnit 5 params
-    testImplementation("org.junit.jupiter:junit-jupiter-params")
-
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+//    testImplementation("org.junit.jupiter:junit-jupiter-params")
+//
+//    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+//    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+//    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
 
 }
 

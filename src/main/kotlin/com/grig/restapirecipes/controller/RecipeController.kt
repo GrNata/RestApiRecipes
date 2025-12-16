@@ -1,11 +1,10 @@
 package com.grig.restapirecipes.controller
 
-import com.grig.restapirecipes.dto.CreateRecipeRequest
-import com.grig.restapirecipes.dto.RecipeDto
-import com.grig.restapirecipes.dto.UpdateRecipeRequest
+import com.grig.restapirecipes.dto.request.CreateRecipeRequest
+import com.grig.restapirecipes.dto.response.RecipeDto
+import com.grig.restapirecipes.dto.request.UpdateRecipeRequest
 import com.grig.restapirecipes.mapper.IngredientMapper
 import com.grig.restapirecipes.mapper.RecipeMapper
-import com.grig.restapirecipes.model.Recipe
 import com.grig.restapirecipes.service.RecipeService
 import jakarta.validation.Valid
 import org.springframework.data.domain.Page
