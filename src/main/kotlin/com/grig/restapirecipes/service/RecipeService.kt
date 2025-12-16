@@ -171,18 +171,6 @@ class RecipeService(
             if (direction.uppercase() == "ASC") Sort.by(sortBy).ascending()
                   else Sort.by(sortBy).descending()
         )
-//        var spec: Specification<Recipe>? = null
-//        if (!name.isNullOrBlank()) {
-//            spec = RecipeSpecification.hasName(name)
-//        }
-//        if (!ingredient.isNullOrBlank()) {
-//            spec = if (spec == null) {
-//                RecipeSpecification.hasIngredient(ingredient)
-//            } else {
-//                spec.and(RecipeSpecification.hasIngredient(ingredient)) as Specification<Recipe>
-//            }
-//        }
-//        val recipesPage: Page<Recipe> = recipeRepository.findAll(spec as Specification<Recipe>, pageable)
         val combinedSpec: Specification<Recipe>? = listOfNotNull(
             name?.takeIf { it.isNotBlank() }?.let { RecipeSpecification.hasName(it) },
             ingredient?.takeIf { it.isNotBlank() }?.let { RecipeSpecification.hasIngredient(it) }
