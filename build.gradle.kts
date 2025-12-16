@@ -37,7 +37,8 @@ dependencies {
 
 //  для OpenAPI definition - красиво и удобно получать и проверять запросы в браузере по:
 //    http://localhost:8080/swagger-ui.html - SWAGGER
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
+//    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.0")
 
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
