@@ -12,6 +12,8 @@ INSERT INTO ingredient (id, name, unit) VALUES
                                   (6,'Мука', 'г'),
                                   (7,'Молоко', 'мл'),
                                   (8,'Сахар', 'г');
+-- Синхронизируем sequence с последним id
+SELECT setval('ingredient_id_seq', (SELECT MAX(id) FROM ingredient));
 
 INSERT INTO recipe (name, description, image) VALUES
                                                   ('Оливье', 'Классический новогодний салат', 'https://example.com/images/olivier.jpg'),

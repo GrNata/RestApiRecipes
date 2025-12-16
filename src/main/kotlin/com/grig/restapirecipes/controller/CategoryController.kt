@@ -1,5 +1,6 @@
 package com.grig.restapirecipes.controller
 
+import com.grig.restapirecipes.dto.request.CategoryRequest
 import com.grig.restapirecipes.dto.response.CategoryDto
 import com.grig.restapirecipes.repository.CategoryRepository
 import com.grig.restapirecipes.service.CategoryService
@@ -16,16 +17,18 @@ class CategoryController(
     private val categoryRepository: CategoryRepository
 ) {
 
+    @Operation(summary = "Получить все категории")
     @GetMapping("/all")
-    fun getAll() : List<CategoryDto> = categoryService.getAll()
+    fun getAll() : List<CategoryDto> = categoryService.getAllCategories()
 
+    @Operation(summary = "Получить категорию по id")
     @GetMapping("/{id}")
-    fun getById(id: Long) : CategoryDto = categoryService.getById(id)
+    fun getById(id: Long) : CategoryDto = categoryService.getByIdCategory(id)
 
 
 //    с пагинацией, сортировкой и фильтром
 //      @Operation(summary = "...") описывает эндпоинт в Swagger UI.
-    @Operation(summary = "Get category with optional search, padination and sorting")
+    @Operation(summary = "Get category with optional search, padination and sorting (с поиском, по странице и сортировкой)")
     @GetMapping
     fun getCategories(
         @RequestParam(required = false) name: String?,
@@ -47,5 +50,19 @@ class CategoryController(
             categoryRepository.findAll(pageable)
         }
         return categories.map { CategoryDto(requireNotNull(it.id), it.name, it.image) }
+    }
+
+    @Operation(summary = "Создать категорию")
+    @PostMapping
+    fun create(@RequestBody request: CategoryRequest) = categoryService.createCategory(request)
+
+    @Operation(summary = "Редактировать категорию")
+    @PutMapping("/{id}")
+    fun update(@PathVariable id: Long, @RequestBody request: CategoryRequest) = categoryService.updateCategory(id, request)
+
+    @Operation(summary = "Удалить категорию")
+    @DeleteMapping("/{id}")
+    fun delete(@PathVariable id: Long) {
+        categoryService.deleteCategory(id)
     }
 }

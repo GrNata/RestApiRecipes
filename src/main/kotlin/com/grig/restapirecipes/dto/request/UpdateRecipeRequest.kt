@@ -9,7 +9,4 @@ data class UpdateRecipeRequest(
     val steps: List<String>?
 )
 
-data class UpdateRecipeIngredientRequest(
-    val ingredientId: Long,
-    val amount: String
-)
+

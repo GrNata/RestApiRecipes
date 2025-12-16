@@ -6,6 +6,7 @@ import com.grig.restapirecipes.dto.request.UpdateRecipeRequest
 import com.grig.restapirecipes.mapper.IngredientMapper
 import com.grig.restapirecipes.mapper.RecipeMapper
 import com.grig.restapirecipes.service.RecipeService
+import io.swagger.v3.oas.annotations.Operation
 import jakarta.validation.Valid
 import org.springframework.data.domain.Page
 import org.springframework.http.ResponseEntity
@@ -22,6 +23,7 @@ class RecipeController(
 //    @GetMapping
 //    fun getAllRecipes() : List<RecipeDto> = recipeService.getAllRecipes()
 
+    @Operation(summary = "Получить рецепт по id")
     @GetMapping("/{id}")
     fun getRecipeById(@PathVariable id: Long) : ResponseEntity<RecipeDto> {
         val recipeDto = recipeService.getRecipeById(id)
@@ -37,13 +39,14 @@ class RecipeController(
 //        recipeService.searchRecipe(name, ingredient)
 
 
+    @Operation(summary = "Комбинированный поиск рецептов по названию и инградиенту, или все")
     @GetMapping("/search")
     fun search(
         @RequestParam(required = false) name: String?,
         @RequestParam(required = false) ingredient: String?
     ) : List<RecipeDto> = recipeService.search(name, ingredient)
 
-
+    @Operation(summary = "Создать новый рецепт")
     @PostMapping
     fun createRecipe(@RequestBody @Valid request: CreateRecipeRequest) : ResponseEntity<RecipeDto> {
         val savedRecipe = recipeService.createRecipe(request)
@@ -55,6 +58,7 @@ class RecipeController(
         return ResponseEntity.ok(dto)
     }
 
+    @Operation(summary = "Редактировать рецепт")
     @PutMapping("/{id}")
     fun updateRecipe(
         @PathVariable id: Long,
@@ -73,6 +77,7 @@ class RecipeController(
 //	•	Если рецепт с таким id есть — удаляется, возвращается 204.
 //	•	Если рецепта нет — выбрасывается RecipeNotFoundException, который ловит GlobalExceptionHandler и возвращает красивый JSON 404.
 //	•	Всё выполняется в одной транзакции — если что-то пойдёт не так, откатится автоматически.
+    @Operation(summary = "Удалить рецепт")
     @DeleteMapping("/{id}")
     fun deleteRecipe(@PathVariable id: Long) : ResponseEntity<Unit> {
         recipeService.deleteRecipe(id)
@@ -81,6 +86,7 @@ class RecipeController(
 
     //    Pagination + Sort
 //    @GetMapping("/recipes")
+    @Operation(summary = "Get recipes with optional search, pagination and sorting  (с поиском, по странице и сортировкой)")
     @GetMapping
     fun searchPecipes(
         @RequestParam(required = false) name : String?,

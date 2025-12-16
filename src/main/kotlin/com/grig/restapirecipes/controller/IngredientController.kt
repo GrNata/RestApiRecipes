@@ -1,5 +1,6 @@
 package com.grig.restapirecipes.controller
 
+import com.grig.restapirecipes.dto.request.IngredientRequest
 import com.grig.restapirecipes.dto.response.IngredientDto
 import com.grig.restapirecipes.repository.IngredientRepository
 import com.grig.restapirecipes.service.IngredientService
@@ -17,16 +18,18 @@ class IngredientController(
     private val ingredientRepository: IngredientRepository
 ) {
 
+    @Operation(summary = "Получить все инградиент")
     @GetMapping("/all")
-    fun getAll() : List<IngredientDto> = ingredientService.getAll()
+    fun getAll() : List<IngredientDto> = ingredientService.getAllingredients()
 
+    @Operation(summary = "Получить инградиент по id")
     @GetMapping("/{id}")
-    fun getById(id: Long) : IngredientDto = ingredientService.getById(id)
+    fun getById(id: Long) : IngredientDto = ingredientService.getByIdIngredient(id)
 
 
 //    с пагинацией, сортировкой и фильтром
 //      @Operation(summary = "...") описывает эндпоинт в Swagger UI.
-    @Operation(summary = "Get ingredients with optional search, pagination and sorting")
+    @Operation(summary = "Get ingredients with optional search, pagination and sorting  (с поиском, по странице и сортировкой)")
     @GetMapping
     fun getIngredients(
         @RequestParam(required = false) name: String?,
@@ -48,5 +51,20 @@ class IngredientController(
                 ingredientRepository.findAll(pageable)
             }
         return ingredients.map { IngredientDto(requireNotNull(it.id), it.name) }
+    }
+
+    @Operation(summary = "Создать инградиент")
+    @PostMapping
+    fun create(@RequestBody request: IngredientRequest) = ingredientService.createIngredient(request)
+
+    @Operation(summary = "Редактировать инградиент")
+    @PutMapping("/{id}")
+    fun update(@PathVariable id: Long, @RequestBody request: IngredientRequest) =
+        ingredientService.updateIngredient(id, request)
+
+    @Operation(summary = "Удалить инградиент")
+    @DeleteMapping("/{id}")
+    fun delete(@PathVariable id: Long) {
+        ingredientService.deleteIngredient(id)
     }
 }

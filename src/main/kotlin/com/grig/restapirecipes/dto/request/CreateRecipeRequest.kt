@@ -13,13 +13,7 @@ data class CreateRecipeRequest(
     @field:NotEmpty val steps: List<String>
 )
 
-data class CreateRecipeIngredientRequest(
-    @field:Positive
-    val ingredientId: Long,
 
-    @field:NotBlank
-    val amount: String
-)
 
 
 
