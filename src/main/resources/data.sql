@@ -73,3 +73,21 @@ INSERT INTO cooking_step (recipe_id, step_number, description) VALUES
                                                                    (3, 2, 'Добавить молоко и яйцо, взбить тесто'),
                                                                    (3, 3, 'Вылить тесто порциями на сковороду'),
                                                                    (3, 4, 'Жарить до золотистой корочки');
+
+
+-- Добавляем роли
+INSERT INTO roles (id, name) VALUES
+                                 (1, 'ROLE_ADMIN'),
+                                 (2, 'ROLE_USER');
+
+-- Добавляем пользователей (пароли пока в явном виде, можно потом захешировать через BCrypt)
+INSERT INTO users (id, username, email, password) VALUES
+                                                      (1, 'Admin', 'admin@mail.ru', '$2a$10$...'),  -- BCrypt hash от "admin1971"
+                                                      (2, 'User', 'user@mail.ru', '$2a$10$...');   -- BCrypt hash от "user1971"
+
+SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));
+
+-- Назначаем роли
+INSERT INTO user_roles (user_id, role_id) VALUES
+                                              (1, 1),  -- Admin -> ROLE_ADMIN
+                                              (2, 2);  -- User -> ROLE_USER
