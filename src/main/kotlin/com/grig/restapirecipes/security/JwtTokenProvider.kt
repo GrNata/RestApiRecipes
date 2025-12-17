@@ -1,5 +1,6 @@
 package com.grig.restapirecipes.security
 
+import com.grig.restapirecipes.user.model.User
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
@@ -9,23 +10,28 @@ import java.nio.charset.StandardCharsets
 import java.util.*
 
 @Component
-class JwtTokenProvider {
-
+class JwtTokenProvider(
     @Value("\${jwt.secret}")
-    private lateinit var jwtSecret: String
+    private val jwtSecret: String,
 
     @Value("\${jwt.expiration}")
-    private var jwtExpirationInMs: Long = 3_600_000     //  1 час
+    private val jwtExpirationInMs: Long
+//private var jwtExpirationInMs: Long = 3_600_000     //  1 час
+) {
+    private val key = Keys.hmacShaKeyFor(jwtSecret.toByteArray(StandardCharsets.UTF_8))
 
-    fun generateToken(userEmail: String): String {
-        val now = Date()
-        val expiryDate = Date(now.time + jwtExpirationInMs)
+//    fun generateToken(userEmail: String): String {
+    fun generateToken(user: User): String {
+//        val now = Date()
+//        val expiryDate = Date(now.time + jwtExpirationInMs)
+        val roles = user.roles.map { it.name }
 
         return Jwts.builder()
-            .setSubject(userEmail)
-            .setIssuedAt(now)
-            .setExpiration(expiryDate)
-            .signWith(SignatureAlgorithm.HS512, jwtSecret)
+            .setSubject(user.email)
+            .claim("roles", roles)
+            .setIssuedAt(Date())
+            .setExpiration(Date(System.currentTimeMillis() + jwtExpirationInMs))
+            .signWith(key, SignatureAlgorithm.HS512)
             .compact()
     }
 

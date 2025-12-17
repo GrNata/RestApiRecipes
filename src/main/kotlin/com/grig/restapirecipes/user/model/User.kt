@@ -2,6 +2,7 @@ package com.grig.restapirecipes.user.model
 
 import jakarta.persistence.*
 import jakarta.validation.constraints.Email
+import org.hibernate.sql.results.graph.Fetch
 
 @Entity
 @Table(name = "users")
@@ -19,6 +20,24 @@ class User(
     var email: String,
 
     @Column(nullable = false)
-    var password: String?
+    var password: String,
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "user_roles",
+        joinColumns = [JoinColumn(name = "user_id")],
+        inverseJoinColumns = [JoinColumn(name = "role_id")]
+    )
+    val roles: MutableSet<Role> = mutableSetOf()
 
 )
+//{
+//    /** ✔ удобный конструктор для register */
+//    constructor(username: String, email: String, password: String, roles: MutableSet<Role>) : this(
+//        id = null,
+//        username = username,
+//        email = email,
+//        password = password,
+//        roles = roles
+//    )
+//}
