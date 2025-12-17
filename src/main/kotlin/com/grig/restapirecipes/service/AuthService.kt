@@ -48,7 +48,8 @@ class AuthService(
 
     fun login(request: LoginRequest) : AuthResponse {
         val user = userRepository.findByEmail(request.email)
-            .orElseThrow { IllegalArgumentException("Invalid email or password") }
+            ?: throw  IllegalArgumentException("Invalid email or password.")
+//            .orElseThrow { IllegalArgumentException("Invalid email or password") }
 
         if (!passwordEncoder.matches(request.password, user.password)) {
             throw  IllegalArgumentException("Invalid email or password.")

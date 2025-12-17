@@ -3,6 +3,8 @@ package com.grig.restapirecipes
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
+//Swagger UI: http://localhost:8080/swagger-ui/index.html
+
 @SpringBootApplication
 class RestApiRecipesApplication
 

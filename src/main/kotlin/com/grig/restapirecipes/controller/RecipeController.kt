@@ -7,6 +7,7 @@ import com.grig.restapirecipes.mapper.IngredientMapper
 import com.grig.restapirecipes.mapper.RecipeMapper
 import com.grig.restapirecipes.service.RecipeService
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.data.domain.Page
 import org.springframework.http.ResponseEntity
@@ -14,14 +15,12 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("api/recipes")
+@Tag(name = "Recipes")
 class RecipeController(
     private val recipeService : RecipeService,
     private val recipeMapper: RecipeMapper,
-    private val ingredientMapper: IngredientMapper
+//    private val ingredientMapper: IngredientMapper
     ){
-
-//    @GetMapping
-//    fun getAllRecipes() : List<RecipeDto> = recipeService.getAllRecipes()
 
     @Operation(summary = "Получить рецепт по id")
     @GetMapping("/{id}")

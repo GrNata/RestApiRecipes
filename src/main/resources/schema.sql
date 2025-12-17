@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS category CASCADE;
 DROP TABLE IF EXISTS recipe CASCADE;
 
 -- Сначала удалить старые таблицы, если есть
+DROP TABLE IF EXISTS user_favorite CASCADE;  -- удаляем старую таблицу избранного, если есть
 DROP TABLE IF EXISTS user_roles CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS roles CASCADE;
@@ -49,6 +50,8 @@ CREATE TABLE cooking_step (
                               description TEXT NOT NULL
 );
 
+
+
 -- Таблица ролей
 CREATE TABLE roles (
                        id BIGSERIAL PRIMARY KEY,
@@ -68,4 +71,11 @@ CREATE TABLE user_roles (
                             user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
                             role_id BIGINT NOT NULL REFERENCES roles(id) ON DELETE CASCADE,
                             PRIMARY KEY(user_id, role_id)
+);
+
+-- Таблица избранного
+CREATE TABLE user_favorite (
+                               user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                               recipe_id BIGINT NOT NULL REFERENCES recipe(id) ON DELETE CASCADE,
+                               PRIMARY KEY(user_id, recipe_id)
 );

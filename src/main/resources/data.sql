@@ -82,12 +82,18 @@ INSERT INTO roles (id, name) VALUES
 
 -- Добавляем пользователей (пароли пока в явном виде, можно потом захешировать через BCrypt)
 INSERT INTO users (id, username, email, password) VALUES
-                                                      (1, 'Admin', 'admin@mail.ru', '$2a$10$...'),  -- BCrypt hash от "admin1971"
-                                                      (2, 'User', 'user@mail.ru', '$2a$10$...');   -- BCrypt hash от "user1971"
+                                                      (1, 'Admin', 'admin@mail.ru', '$2a$10$dntXFvve5VQlWB2hWOoIQ.2PD0BN535EnhVS.CU/mRSmHzWcJjopq'),  -- BCrypt hash от "admin1971"
+                                                      (2, 'User', 'user@mail.ru', '$2a$10$e2/DT5AwiYOEOnjKSdKX6.4CazcZGmGouwK5V1tZ3f.XCR1vGLh5e');   -- BCrypt hash от "user1971"
 
 SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));
 
 -- Назначаем роли
 INSERT INTO user_roles (user_id, role_id) VALUES
                                               (1, 1),  -- Admin -> ROLE_ADMIN
+                                              (1, 2),  -- Admin → ROLE_USER (если нужно)
                                               (2, 2);  -- User -> ROLE_USER
+
+
+-- Пример добавления избранного
+INSERT INTO user_favorite (user_id, recipe_id) VALUES (1, 1);
+INSERT INTO user_favorite (user_id, recipe_id) VALUES (2, 2);

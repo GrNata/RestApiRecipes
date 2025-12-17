@@ -1,6 +1,5 @@
 package com.grig.restapirecipes.security
 
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -10,6 +9,8 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import kotlin.jvm.java
 
 
 @Configuration
@@ -24,16 +25,34 @@ class SecurityConfig(
     fun authenticationManager(config: AuthenticationConfiguration) : AuthenticationManager =
         config.authenticationManager
 
+//    @Bean
+//    fun filterChain(http: HttpSecurity) : SecurityFilterChain {
+//        http
+//            .csrf { it.disable() }
+//            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+//            .authorizeHttpRequests {
+////                смотри пути: "api/auth/**", "/swagger-ui/**", "/v3/api-docs/**"  - ????
+//                it.requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+//                    it.anyRequest().authenticated()
+//            }
+//        return http.build()
+//    }
+
     @Bean
-    fun filterChain(http: HttpSecurity) : SecurityFilterChain {
-        http
-            .csrf { it.disable() }
+    fun filterChain(http: HttpSecurity, jwtAuthFilter: JwtAuthenticationFilter): SecurityFilterChain {
+        http.csrf { it.disable() }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
-            .authorizeHttpRequests {
-//                смотри пути: "api/auth/**", "/swagger-ui/**", "/v3/api-docs/**"  - ????
-                it.requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                    it.anyRequest().authenticated()
+            .authorizeHttpRequests { auth ->
+                auth.requestMatchers(
+                    "/api/auth/**",
+                    "/v3/api-docs/**",
+                    "/swagger-ui/**",
+                    "/swagger-ui.html"
+                ).permitAll()
+                auth.anyRequest().authenticated()
             }
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
+
         return http.build()
     }
 }
