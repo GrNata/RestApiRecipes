@@ -6,6 +6,7 @@ import com.grig.restapirecipes.repository.CategoryRepository
 import org.springframework.stereotype.Service
 import com.grig.restapirecipes.exception.RecipeNotFoundException
 import com.grig.restapirecipes.model.Category
+import org.springframework.security.access.prepost.PreAuthorize
 
 @Service
 class CategoryService(
@@ -24,11 +25,13 @@ class CategoryService(
             }
             .orElseThrow { RecipeNotFoundException("Category with id ${id} not found.") }
 
+    @PreAuthorize("hasRole('ADMIN')")
     fun createCategory(request: CategoryRequest) : Category {
         val category = Category(name = request.name, image = request.image)
         return categoryRepository.save(category)
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     fun updateCategory(id: Long, request: CategoryRequest) : Category {
         val category = categoryRepository.findById(id)
             .orElseThrow { RecipeNotFoundException("Category with id ${id} not found.") }
@@ -37,6 +40,7 @@ class CategoryService(
         return categoryRepository.save(category)
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     fun deleteCategory(id: Long) {
         val category = categoryRepository.findById(id)
             .orElseThrow { RecipeNotFoundException("Category with id {id} not found.") }

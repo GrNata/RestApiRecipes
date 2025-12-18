@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service
 import com.grig.restapirecipes.exception.RecipeNotFoundException
 import com.grig.restapirecipes.model.Ingredient
 import com.grig.restapirecipes.repository.IngredientRepository
+import org.springframework.security.access.prepost.PreAuthorize
 
 
 @Service
@@ -28,11 +29,13 @@ class IngredientService(
             .orElseThrow { RecipeNotFoundException("Ingredient with id ${id} not found.") }
 
 
+    @PreAuthorize("hasRole('ADMIN')")
     fun createIngredient(request: IngredientRequest) : Ingredient {
         val ingredient = Ingredient(request.name, request.unit)
         return ingredientRepository.save(ingredient)
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     fun updateIngredient(id: Long, request: IngredientRequest) : Ingredient {
         val ingredient = ingredientRepository.findById(id)
             .orElseThrow { RecipeNotFoundException("Ingredient with id ${id} not found.") }
@@ -41,6 +44,7 @@ class IngredientService(
         return ingredientRepository.save(ingredient)
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     fun deleteIngredient(id: Long) {
         val ingredient = ingredientRepository.findById(id)
             .orElseThrow { RecipeNotFoundException("Ingredient with id ${id} not found.") }

@@ -13,12 +13,15 @@ import com.grig.restapirecipes.repository.IngredientRepository
 import com.grig.restapirecipes.repository.RecipeIngredientRepository
 import com.grig.restapirecipes.repository.RecipeRepository
 import com.grig.restapirecipes.repository.StepRepository
+import com.grig.restapirecipes.repository.UserRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Sort
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.jpa.domain.Specification
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.lang.IllegalArgumentException
 
 @Service
 class RecipeService(
@@ -26,7 +29,8 @@ class RecipeService(
     private val recipeIngredientRepository: RecipeIngredientRepository,
     private val stepRepository: StepRepository,
     private val categoryRepository: CategoryRepository,
-    private val ingredientRepository: IngredientRepository
+    private val ingredientRepository: IngredientRepository,
+    private val userRepository: UserRepository
 ) {
 
     fun getAllRecipes() : List<RecipeDto>  =
@@ -68,9 +72,13 @@ class RecipeService(
     }
 
 
-
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Transactional
-    fun createRecipe(request: CreateRecipeRequest) : Recipe {
+//    fun createRecipe(request: CreateRecipeRequest) : Recipe {
+    fun createRecipe(userEmail: String, request: CreateRecipeRequest) : Recipe {
+        val user = userRepository.findByEmailWithRoles(userEmail)
+            ?: throw IllegalArgumentException("User not found: ${userEmail}")
+
         val categories = categoryRepository.findAllById(request.categoryIds).toMutableSet()
 
         val recipe = Recipe(
@@ -105,6 +113,8 @@ class RecipeService(
         return recipeRepository.save(recipe)
     }
 
+    // Редактирование — только автор или ADMIN
+    @PreAuthorize("hasRole('ADMIN') or @recipeSecurity.isAuthor(#id, authentication.name)")
     @Transactional
     fun updateRecipe(id: Long, request: UpdateRecipeRequest) : Recipe {
         val recipe = recipeRepository.findById(id)
@@ -140,15 +150,11 @@ class RecipeService(
             return recipeRepository.save(recipe)
         }
 
+    @PreAuthorize("hasRole('ADMIN') or @recipeSecurity.isAuthor(#id, authentication.name)")
     @Transactional
     fun deleteRecipe(id: Long) {
         val recipe = recipeRepository.findById(id)
             .orElseThrow { RecipeNotFoundException("Recipe with id $id not found") }
-
-//        // ВАЖНО
-//        recipe.recipeIngredients.clear()
-//        recipe.steps.clear()
-//        recipe.categories.clear()
 
         recipeRepository.delete(recipe)
     }
@@ -188,28 +194,5 @@ class RecipeService(
             RecipeMapper.toDto(recipe, ingredients, staps)
         }
     }
-
-
-    //  Был - либо имя рецепта, либо имя ингредиента
-//    fun searchRecipe(
-//        name: String?,
-//        ingredient: String?
-//    ) : List<RecipeDto> {
-//        val recipes = when {
-//            !name.isNullOrBlank() ->
-//                recipeRepository.searchByName(name)
-//            !ingredient.isNullOrBlank() ->
-//                recipeRepository.searchByIngredient(ingredient)
-//
-//            else ->
-//                recipeRepository.findAll()
-//        }
-//        return recipes.map { recipe ->
-//            val ingredients = recipeIngredientRepository.findIngredients(requireNotNull(recipe.id))
-//            val steps = stepRepository.findSteps(requireNotNull(recipe.id))
-//            RecipeMapper.toDto(recipe, ingredients, steps)
-//        }
-//    }
-
 
 }

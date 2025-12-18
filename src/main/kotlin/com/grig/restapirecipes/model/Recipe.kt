@@ -1,5 +1,6 @@
 package com.grig.restapirecipes.model
 
+import com.grig.restapirecipes.user.model.User
 import jakarta.persistence.*
 
 @Entity
@@ -19,6 +20,10 @@ class Recipe(
 
 //    @Column(length = 500)
     var image: String? = null,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    var createBy: User? = null,
 
     @ManyToMany
     @JoinTable(

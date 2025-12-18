@@ -22,9 +22,9 @@ class FavoriteController(
 ) {
 
     private fun getCurrentUserEmail() : String {
-        val authHeader = SecurityContextHolder.getContext().authentication
-        return authHeader?.name
-            ?: throw IllegalArgumentException("User name not found: ${authHeader?.name}")
+        val authentication = SecurityContextHolder.getContext().authentication
+        return authentication?.name
+            ?: throw IllegalArgumentException("User name not found: ${authentication?.name}")
     }
 
     @Operation(
@@ -33,7 +33,8 @@ class FavoriteController(
     )
     @PostMapping("/{recipeId}")
     fun addFavorite(@PathVariable recipeId: Long) : ResponseEntity<Unit> {
-        favoriteService.addFavorite(getCurrentUserEmail(), recipeId)
+        val userEmail = getCurrentUserEmail()
+        favoriteService.addFavorite(userEmail, recipeId)
         return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 
@@ -43,7 +44,8 @@ class FavoriteController(
     )
     @DeleteMapping("/{recipeId}")
     fun removeFavorite(@PathVariable recipeId: Long) : ResponseEntity<Unit> {
-        favoriteService.removeFavorite(getCurrentUserEmail(), recipeId)
+        val userEmail = getCurrentUserEmail()
+        favoriteService.removeFavorite(userEmail, recipeId)
         return ResponseEntity.noContent().build()
     }
 
@@ -53,7 +55,8 @@ class FavoriteController(
     )
     @GetMapping
     fun listFavorite() : ResponseEntity<List<RecipeDto>> {
-        val favorites = favoriteService.listFavoritesByUser(getCurrentUserEmail())
+        val userEmail = getCurrentUserEmail()
+        val favorites = favoriteService.listFavoritesByUser(userEmail)
         return ResponseEntity.ok(favorites)
     }
 }

@@ -22,7 +22,7 @@ class User(
     @Column(nullable = false)
     var password: String,
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
     @JoinTable(
         name = "user_roles",
         joinColumns = [JoinColumn(name = "user_id")],

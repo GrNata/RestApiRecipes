@@ -3,15 +3,17 @@ package com.grig.restapirecipes.controller
 import com.grig.restapirecipes.dto.request.CreateRecipeRequest
 import com.grig.restapirecipes.dto.response.RecipeDto
 import com.grig.restapirecipes.dto.request.UpdateRecipeRequest
-import com.grig.restapirecipes.mapper.IngredientMapper
 import com.grig.restapirecipes.mapper.RecipeMapper
 import com.grig.restapirecipes.service.RecipeService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.data.domain.Page
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
+import java.lang.IllegalArgumentException
 
 @RestController
 @RequestMapping("api/recipes")
@@ -45,16 +47,24 @@ class RecipeController(
         @RequestParam(required = false) ingredient: String?
     ) : List<RecipeDto> = recipeService.search(name, ingredient)
 
+
+    //    вспомогательная функция в контроллер для получение Email (авторизированного пользователя)
+    private fun getCurrentUserEmail() : String {
+        val authentication = SecurityContextHolder.getContext().authentication
+        return authentication?.name ?: throw IllegalArgumentException("User not authenticated")
+    }
+
     @Operation(summary = "Создать новый рецепт")
     @PostMapping
     fun createRecipe(@RequestBody @Valid request: CreateRecipeRequest) : ResponseEntity<RecipeDto> {
-        val savedRecipe = recipeService.createRecipe(request)
+        val userEmail = getCurrentUserEmail()
+        val savedRecipe = recipeService.createRecipe(userEmail, request)
         val dto = recipeMapper.toDto(
             recipe = savedRecipe,
             ingredients = savedRecipe.recipeIngredients.toList(),
             steps = savedRecipe.steps.toList()
         )
-        return ResponseEntity.ok(dto)
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto)
     }
 
     @Operation(summary = "Редактировать рецепт")
