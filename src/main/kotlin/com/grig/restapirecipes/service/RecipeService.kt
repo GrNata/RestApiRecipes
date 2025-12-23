@@ -19,6 +19,7 @@ import org.springframework.data.domain.Sort
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.lang.IllegalArgumentException
@@ -33,6 +34,7 @@ class RecipeService(
     private val userRepository: UserRepository
 ) {
 
+    @Transactional(readOnly = true)
     fun getAllRecipes() : List<RecipeDto>  =
         recipeRepository.findAll().map { recipe ->
 //            УБРАТЬ !!
@@ -51,7 +53,8 @@ class RecipeService(
         return RecipeMapper.toDto(recipe, ingredients, steps)
     }
 
-
+// комбинационный поиск или название, или ингредиент, или все вместе
+    @Transactional(readOnly = true)
     fun search(name: String?, ingredient: String?) : List<RecipeDto> {
         var spec: Specification<Recipe>? = null
 
@@ -78,6 +81,7 @@ class RecipeService(
     fun createRecipe(userEmail: String, request: CreateRecipeRequest) : Recipe {
         val user = userRepository.findByEmailWithRoles(userEmail)
             ?: throw IllegalArgumentException("User not found: ${userEmail}")
+//            ?: throw AuthenticationCredentialsNotFoundException("User not found: ${userEmail}")
 
         val categories = categoryRepository.findAllById(request.categoryIds).toMutableSet()
 
@@ -160,6 +164,7 @@ class RecipeService(
     }
 
     //    Pagination + Sort
+    @Transactional(readOnly = true)
     fun searchRecipes(
         name: String?,
         ingredient: String?,

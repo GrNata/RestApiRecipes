@@ -1,9 +1,12 @@
 plugins {
     kotlin("jvm") version "2.2.21"
     kotlin("plugin.spring") version "2.2.21"
-    id("org.springframework.boot") version "4.0.0"
+//    id("org.springframework.boot") version "4.0.0"
+    id("org.springframework.boot") version "3.4.1"
     id("io.spring.dependency-management") version "1.1.7"
     kotlin("plugin.jpa") version "2.2.21"
+    kotlin("kapt") version "2.2.21"
+
 }
 
 group = "com.grig"
@@ -12,70 +15,71 @@ description = "RestApiRecipes"
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(24)
-    }
-}
-
-configurations {
-    compileOnly {
-        extendsFrom(configurations.annotationProcessor.get())
+//        languageVersion.set(JavaLanguageVersion.of(25))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 
 repositories {
     mavenCentral()
+//    maven("https://repo.spring.io/milestone") // иногда Spring Boot 4 еще в milestone
 }
 
 dependencies {
+    // -------------------------
+    // Core dependencies
+    // -------------------------
+    implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.springframework.boot:spring-boot-starter-webmvc")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("tools.jackson.module:jackson-module-kotlin")
+    implementation("org.springframework.boot:spring-boot-starter-security")
 
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    // PostgreSQL
     implementation("org.postgresql:postgresql:42.7.3")
 
-//  для OpenAPI definition - красиво и удобно получать и проверять запросы в браузере по:
-//    http://localhost:8080/swagger-ui.html - SWAGGER
-//    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
+    implementation("com.h2database:h2")
+
+    // OpenAPI/Swagger
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.0")
 
-    implementation("org.springframework.boot:spring-boot-starter-security")
+    // JWT
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
-    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5") // JSON serializer
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
 
+    // Lombok
+    kapt("org.projectlombok:lombok")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
-//    runtimeOnly("org.postgresql:postgresql")
-    annotationProcessor("org.projectlombok:lombok")
-//    testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
-//    testImplementation("org.springframework.boot:spring-boot-starter-validation-test")
-//    testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+// -------------------------
+    // Test dependencies
+    // -------------------------
+    // Spring Boot тесты
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+
+    // Spring Security тесты
+    testImplementation("org.springframework.security:spring-security-test")
+
+    // JUnit5 Kotlin
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:2.2.21")
+
+    // Mockito Kotlin
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.3.1")
-//    (Опционально) JUnit 5 params
-//    testImplementation("org.junit.jupiter:junit-jupiter-params")
-//
-//    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-//    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
-//    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
 
-    // JWT
-//    Объяснение:
-//	•	jjwt-api — основной API для работы с токенами.
-//	•	jjwt-impl — реализация API (нужен на runtime).
-//	•	jjwt-jackson — чтобы JJWT мог сериализовать/десериализовать JSON через Jackson.
-    implementation("io.jsonwebtoken:jjwt-api:0.11.5")
-    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
-    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5") // для работы с JSON через Jackson
+    // Jackson Kotlin для тестов
+    testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.2")
+//    БД H2 для тестов
+    testImplementation("com.h2database:h2:2.2.220")
+ }
 
-}
 
 kotlin {
+//    jvmToolchain(25)
+    jvmToolchain(21)
+
     compilerOptions {
         freeCompilerArgs.addAll("-Xjsr305=strict", "-Xannotation-default-target=param-property")
     }
@@ -90,3 +94,7 @@ allOpen {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
+
+
+

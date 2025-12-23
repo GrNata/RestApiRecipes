@@ -31,13 +31,13 @@ class User(
     val roles: MutableSet<Role> = mutableSetOf()
 
 )
-//{
-//    /** ✔ удобный конструктор для register */
-//    constructor(username: String, email: String, password: String, roles: MutableSet<Role>) : this(
-//        id = null,
-//        username = username,
-//        email = email,
-//        password = password,
-//        roles = roles
-//    )
-//}
+{
+    /** ✔ удобный конструктор для register */
+    constructor(username: String, email: String, password: String, roles: MutableSet<Role>) : this(
+        id = null,
+        username = username,
+        email = email,
+        password = password,
+        roles = roles
+    )
+}

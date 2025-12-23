@@ -20,8 +20,7 @@ import java.lang.IllegalArgumentException
 @Tag(name = "Recipes")
 class RecipeController(
     private val recipeService : RecipeService,
-    private val recipeMapper: RecipeMapper,
-//    private val ingredientMapper: IngredientMapper
+    private val recipeMapper: RecipeMapper
     ){
 
     @Operation(summary = "Получить рецепт по id")

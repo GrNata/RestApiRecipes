@@ -7,6 +7,7 @@ import com.grig.restapirecipes.exception.RecipeNotFoundException
 import com.grig.restapirecipes.model.Ingredient
 import com.grig.restapirecipes.repository.IngredientRepository
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.transaction.annotation.Transactional
 
 
 @Service
@@ -14,6 +15,7 @@ class IngredientService(
     private val ingredientRepository : IngredientRepository
 ) {
 
+    @Transactional(readOnly = true)
     fun getAllingredients() : List<IngredientDto> =
         ingredientRepository.findAll()
             .map {

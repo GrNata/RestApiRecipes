@@ -9,7 +9,10 @@ import com.grig.restapirecipes.mapper.RecipeMapper
 import com.grig.restapirecipes.repository.RecipeRepository
 import com.grig.restapirecipes.repository.UserFavoriteRepository
 import com.grig.restapirecipes.repository.UserRepository
+import org.springframework.dao.EmptyResultDataAccessException
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -40,6 +43,13 @@ class FavoriteService(
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @Transactional
     fun removeFavorite(userEmail: String, recipeId: Long) {
+
+        val authEmail = SecurityContextHolder.getContext().authentication.name
+
+        if (authEmail != userEmail) {
+            throw AccessDeniedException("Cannot delete чужой favorite")
+        }
+
         val user = userRepository.findByEmail(userEmail)
             ?: throw IllegalArgumentException("User not found: ${userEmail}")
         val recipe = recipeRepository.findById(recipeId)

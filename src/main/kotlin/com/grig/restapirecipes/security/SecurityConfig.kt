@@ -17,7 +17,7 @@ import kotlin.jvm.java
 
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true)
-class SecurityConfig(
+class SecurityConfig (
     private val customUserDetailsService: CustomUserDetailsService,
     private val jwtTokenProvider: JwtTokenProvider
 ) {
@@ -29,27 +29,63 @@ class SecurityConfig(
         config.authenticationManager
 
 
-    @Bean
-    fun filterChain(
-        http: HttpSecurity,
-        jwtAuthFilter: JwtAuthenticationFilter
-    ): SecurityFilterChain {
+//    @Bean
+//    fun filterChain(
+//        http: HttpSecurity,
+//        jwtAuthFilter: JwtAuthenticationFilter
+//    ): SecurityFilterChain {
+//
+//        http
+//            .csrf { it.disable() }
+//            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+//            .authorizeHttpRequests { auth ->
+//                auth.requestMatchers(
+//                    "/api/auth/**",
+//                    "/v3/api-docs/**",
+//                    "/swagger-ui/**",
+////                    "/swagger-ui.html"
+//                ).permitAll()
+//                auth.requestMatchers(HttpMethod.GET, "/api/recipes/**").permitAll()
+//                auth.anyRequest().authenticated()
+//            }
+//            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
+//
+//        return http.build()
+//    }
 
+
+
+//    JWT-фильтр добавляй ТОЛЬКО если активен профиль prod в JwtAuthenticationFilter
+
+////    Оставляем БЕЗ JWT для unit-тестов:
+//    @Bean
+//    fun filterChain(http: HttpSecurity): SecurityFilterChain {
+//        http
+//            .csrf { it.disable() }
+//////            для консоли H2
+////            .headers { it.frameOptions { it.sameOrigin() } }
+////            .authorizeHttpRequests { auth ->
+////                auth.requestMatchers("/h2-console/**").permitAll()
+////                    .anyRequest().authenticated()
+////            }
+//            .authorizeHttpRequests {
+//                it.anyRequest().authenticated()
+//            }
+//            .httpBasic {}
+//
+//        return http.build()
+//    }
+
+//     которая объединяет все нужные правила
+    @Bean
+    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .csrf { it.disable() }
-            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+            .headers { it.frameOptions { it.sameOrigin() } }
             .authorizeHttpRequests { auth ->
-                auth.requestMatchers(
-                    "/api/auth/**",
-                    "/v3/api-docs/**",
-                    "/swagger-ui/**",
-//                    "/swagger-ui.html"
-                ).permitAll()
-                auth.requestMatchers(HttpMethod.GET, "/api/recipes/**").permitAll()
-                auth.anyRequest().authenticated()
+                auth.requestMatchers("/h2-console/**").permitAll()
+                    .anyRequest().authenticated()
             }
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
-
         return http.build()
     }
 }
