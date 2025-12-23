@@ -11,6 +11,8 @@ DROP TABLE IF EXISTS user_roles CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS roles CASCADE;
 
+DROP TABLE IF EXISTS refresh_token CASCADE;
+
 -- Таблица ролей
 CREATE TABLE roles (
                        id BIGSERIAL PRIMARY KEY,
@@ -30,6 +32,14 @@ CREATE TABLE user_roles (
                             user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
                             role_id BIGINT NOT NULL REFERENCES roles(id) ON DELETE CASCADE,
                             PRIMARY KEY(user_id, role_id)
+);
+
+
+CREATE TABLE refresh_token (
+    id BIGSERIAL PRIMARY KEY,
+    token VARCHAR(255) NOT NULL UNIQUE ,
+    user_email VARCHAR(100) NOT NULL ,
+    expiry_date TIMESTAMP NOT NULL
 );
 
 
@@ -83,3 +93,5 @@ CREATE TABLE user_favorite (
                                recipe_id BIGINT NOT NULL REFERENCES recipe(id) ON DELETE CASCADE,
                                PRIMARY KEY(user_id, recipe_id)
 );
+
+

@@ -6,6 +6,7 @@ import com.grig.restapirecipes.repository.CategoryRepository
 import org.springframework.stereotype.Service
 import com.grig.restapirecipes.exception.RecipeNotFoundException
 import com.grig.restapirecipes.model.Category
+import org.springframework.data.domain.Pageable
 import org.springframework.security.access.prepost.PreAuthorize
 
 @Service

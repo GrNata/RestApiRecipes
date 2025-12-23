@@ -83,7 +83,7 @@ class SecurityConfig (
             .csrf { it.disable() }
             .headers { it.frameOptions { it.sameOrigin() } }
             .authorizeHttpRequests { auth ->
-                auth.requestMatchers("/h2-console/**").permitAll()
+                auth.requestMatchers("/h2-console/**", "/api/auth/**", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                     .anyRequest().authenticated()
             }
         return http.build()

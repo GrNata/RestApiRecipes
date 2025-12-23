@@ -23,6 +23,7 @@ class CategoryController(
     @GetMapping("/all")
     fun getAll() : List<CategoryDto> = categoryService.getAllCategories()
 
+
     @Operation(summary = "Получить категорию по id")
     @GetMapping("/{id}")
     fun getById(id: Long) : CategoryDto = categoryService.getByIdCategory(id)

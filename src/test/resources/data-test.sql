@@ -18,6 +18,10 @@ INSERT INTO user_roles (user_id, role_id) VALUES
                                               (1, 2),
                                               (2, 2);
 
+
+INSERT INTO refresh_token (token, user_email, expiry_date) VALUES
+    ('sample-refresh-token', 'user@mail.ru', CURRENT_TIMESTAMP + INTERVAL '30 days');
+
 -- Категории
 INSERT INTO category (id, name) VALUES
                                     (1, 'Супы'),
