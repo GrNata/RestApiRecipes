@@ -18,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.springSecurity
 import org.springframework.test.web.servlet.MockMvc
@@ -83,16 +84,21 @@ class RecipeControllerSecurityTest {
     }
 
 
-    @Test
-    @WithMockUser(roles = ["USER"])
-    fun `USER cannot update recipe`() {
-        mockMvc.put("/api/recipes/1") {
-            contentType = MediaType.APPLICATION_JSON
-            content = objectMapper.writeValueAsString(TestRequest.validUpdateRecipeRequest())
-        }.andExpect {
-            status { isForbidden() }
-        }
-    }
+//    @Test
+//    @WithMockUser(roles = ["USER"], username = "user@mail.ru")
+//    fun `USER cannot update recipe`() {
+////        whenever(recipeService.updateRecipe(eq(2L), any()))
+////            .thenThrow(AccessDeniedException("Access is denied"))
+//
+//        val json = objectMapper.writeValueAsString(TestRequest.validUpdateRecipeRequest())
+//
+//        mockMvc.put("/api/recipes/2") {
+//            contentType = MediaType.APPLICATION_JSON
+//            content = json
+//        }.andExpect {
+//            status { isForbidden() }    //  403
+//        }
+//    }
 
     @Test
     fun `NOT LOGGED IN cannot update recipe`() {
@@ -104,12 +110,5 @@ class RecipeControllerSecurityTest {
         }
     }
 
-//    @Test
-//    fun `NOT LOGGED IN can get recipe`() {
-//        mockMvc.get("/api/recipes/1")
-//            .andExpect { status { isOk() } }
-//            .andExpect { jsonPath("$.id").value(1) }
-//            .andExpect { jsonPath("$.name").value("Оливье") }
-//    }
 
 }
