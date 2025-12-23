@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement
 // FavoritesController (JWT защищенные методы)
 @RestController
 @RequestMapping("api/favorites")
-@Tag(name = "Favorites")
+@Tag(name = "Favorites", description = "Методы для работы с избранными")
 class FavoriteController(
     private val favoriteService: FavoriteService,
     private val jwtTokenProvider: JwtTokenProvider

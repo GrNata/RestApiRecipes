@@ -17,7 +17,7 @@ import java.lang.IllegalArgumentException
 
 @RestController
 @RequestMapping("api/recipes")
-@Tag(name = "Recipes")
+@Tag(name = "Recipes", description = "Методы для работы с рецептами")
 class RecipeController(
     private val recipeService : RecipeService,
     private val recipeMapper: RecipeMapper

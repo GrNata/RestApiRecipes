@@ -5,6 +5,7 @@ import com.grig.restapirecipes.dto.response.IngredientDto
 import com.grig.restapirecipes.repository.IngredientRepository
 import com.grig.restapirecipes.service.IngredientService
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("api/ingredients")
+@Tag(name = "Ingredient", description = "Методы для работыт с ингредиентами")
 class IngredientController(
     private val ingredientService: IngredientService,
     private val ingredientRepository: IngredientRepository

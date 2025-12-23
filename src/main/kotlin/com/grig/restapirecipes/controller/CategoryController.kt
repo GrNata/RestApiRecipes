@@ -5,6 +5,7 @@ import com.grig.restapirecipes.dto.response.CategoryDto
 import com.grig.restapirecipes.repository.CategoryRepository
 import com.grig.restapirecipes.service.CategoryService
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("api/categories")
+@Tag(name = "Category", description = "Методы для работы с категориями")
 class CategoryController(
     private val categoryService: CategoryService,
     private val categoryRepository: CategoryRepository
