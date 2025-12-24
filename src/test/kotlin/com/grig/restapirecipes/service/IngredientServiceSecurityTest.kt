@@ -23,7 +23,7 @@ import kotlin.test.assertEquals
 @ActiveProfiles("test") // для H2 и data-test.sql
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Transactional
-class IngredientServiceSecurityTest(@Autowired private val size: SizeValidatorForCollection) {
+class IngredientServiceSecurityTest() {
 
     @Autowired
     lateinit var ingredientService: IngredientService

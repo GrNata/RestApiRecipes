@@ -17,7 +17,8 @@ object TestRequest {
         ingredients = listOf(
             UpdateRecipeIngredientRequest(
                 ingredientId = 1L,
-                amount = "100 g"
+                amount = "100 g",
+                unitId = 1L
             )
         ),
         steps = listOf("Step 1", "Step 2")

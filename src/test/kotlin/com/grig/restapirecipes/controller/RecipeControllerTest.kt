@@ -89,7 +89,7 @@ class RecipeControllerTest {
         whenever(recipeService.createRecipe(any(), any()))
             .thenThrow(DataIntegrityViolationException("Recipe name is too long"))
     val longName = "x".repeat(300)
-    val request = CreateRecipeRequest(longName, "desc", "img", listOf(1L), listOf(CreateRecipeIngredientRequest(1L, "3")), listOf("Step-1"))
+    val request = CreateRecipeRequest(longName, "desc", "img", listOf(1L), listOf(CreateRecipeIngredientRequest(1L, "3", 1L)), listOf("Step-1"))
 
     val json = objectMapper.writeValueAsString(request)
     mockMvc.post("/api/recipes") {

@@ -19,8 +19,8 @@ INSERT INTO user_roles (user_id, role_id) VALUES
                                               (2, 2);
 
 
-INSERT INTO refresh_token (token, user_email, expiry_date) VALUES
-    ('sample-refresh-token', 'user@mail.ru', CURRENT_TIMESTAMP + INTERVAL '30 days');
+INSERT INTO refresh_token (ID, token, user_email, expiry_date) VALUES
+    (1,'sample-refresh-token', 'user@mail.ru', DATEADD('DAY', 30, CURRENT_TIMESTAMP));
 
 -- Категории
 INSERT INTO category (id, name) VALUES
@@ -32,17 +32,26 @@ ALTER TABLE category ALTER COLUMN id RESTART WITH 4;
 
 
 -- Ингредиенты
-INSERT INTO ingredient (id, name, unit) VALUES
-                                            (1,'Картофель', 'г'),
-                                            (2,'Морковь', 'г'),
-                                            (3,'Свекла', 'г'),
-                                            (4,'Мясо', 'г'),
-                                            (5,'Яйца', 'шт'),
-                                            (6,'Мука', 'г'),
-                                            (7,'Молоко', 'мл'),
-                                            (8,'Сахар', 'г');
-
+INSERT INTO ingredient (id, name) VALUES
+                                            (1,'Картофель'),
+                                            (2,'Морковь'),
+                                            (3,'Свекла'),
+                                            (4,'Мясо'),
+                                            (5,'Яйца'),
+                                            (6,'Мука'),
+                                            (7,'Молоко'),
+                                            (8,'Сахар');
 ALTER TABLE ingredient ALTER COLUMN id RESTART WITH 9;
+
+-- Units (единицы измерения)
+INSERT INTO unit(id, code, label) VALUES
+                                  (1, 'G', 'г'),
+                                  (2, 'KG', 'кг'),
+                                  (3, 'ML', 'мл'),
+                                  (4, 'L', 'л'),
+                                  (5, 'PCS', 'шт');
+
+ALTER TABLE UNIT ALTER COLUMN id RESTART WITH 6;
 
 -- Рецепты
 INSERT INTO recipe (id, name, description, image, user_id) VALUES
@@ -58,20 +67,21 @@ INSERT INTO recipe_category (recipe_id, category_id) VALUES
                                                          (2, 1),
                                                          (3, 3);
 
+
 -- Связь рецептов с ингредиентами
-INSERT INTO recipe_ingredient (recipe_id, ingredient_id, amount) VALUES
-                                                                     (1, 1, '2 шт'),
-                                                                     (1, 2, '1 шт'),
-                                                                     (1, 5, '3 шт'),
-                                                                     (1, 4, '200 г'),
-                                                                     (2, 1, '3 шт'),
-                                                                     (2, 2, '1 шт'),
-                                                                     (2, 3, '1 шт'),
-                                                                     (2, 4, '300 г'),
-                                                                     (3, 6, '200 г'),
-                                                                     (3, 7, '250 мл'),
-                                                                     (3, 8, '50 г'),
-                                                                     (3, 5, '1 шт');
+INSERT INTO recipe_ingredient (recipe_id, ingredient_id, unit_id, amount) VALUES
+                                                                     (1, 1, 5, '2'),
+                                                                     (1, 2, 5 , '1'),
+                                                                     (1, 5, 5, '3'),
+                                                                     (1, 4, 1, '200'),
+                                                                     (2, 1, 5, '3'),
+                                                                     (2, 2, 5, '1'),
+                                                                     (2, 3, 5, '1'),
+                                                                     (2, 4, 1, '300'),
+                                                                     (3, 6, 1, '200'),
+                                                                     (3, 7, 2, '250'),
+                                                                     (3, 8, 1, '50'),
+                                                                     (3, 5, 5, '1');
 
 -- Шаги приготовления
 -- ОЛИВЬЕ

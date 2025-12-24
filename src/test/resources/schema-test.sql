@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS recipe_ingredient CASCADE;
 DROP TABLE IF EXISTS recipe_category CASCADE;
 DROP TABLE IF EXISTS cooking_step CASCADE;
 DROP TABLE IF EXISTS ingredient CASCADE;
+DROP TABLE IF EXISTS unit CASCADE;
 DROP TABLE IF EXISTS category CASCADE;
 DROP TABLE IF EXISTS recipe CASCADE;
 
@@ -57,6 +58,12 @@ CREATE TABLE ingredient (
                             unit VARCHAR(50)
 );
 
+CREATE TABLE unit(
+                     id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                     code VARCHAR(20) NOT NULL UNIQUE,
+                     label VARCHAR(50) NOT NULL
+);
+
 -- Таблица рецептов
 CREATE TABLE recipe (
                         id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -81,6 +88,7 @@ CREATE TABLE recipe_ingredient (
                                    recipe_id BIGINT NOT NULL,
                                    ingredient_id BIGINT NOT NULL,
                                    amount VARCHAR(255),
+                                   unit_id BIGINT NOT NULL REFERENCES unit(id),
                                    PRIMARY KEY(recipe_id, ingredient_id),
                                    FOREIGN KEY(recipe_id) REFERENCES recipe(id) ON DELETE CASCADE,
                                    FOREIGN KEY(ingredient_id) REFERENCES ingredient(id) ON DELETE CASCADE

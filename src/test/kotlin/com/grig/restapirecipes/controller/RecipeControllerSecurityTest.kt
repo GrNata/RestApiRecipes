@@ -16,18 +16,21 @@ import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.springSecurity
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.anonymous
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.put
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import kotlin.test.Test
 
-@WebMvcTest(RecipeController::class)
+//@WebMvcTest(RecipeController::class)
+@SpringBootTest
 @AutoConfigureMockMvc
 class RecipeControllerSecurityTest {
     @Autowired
@@ -59,17 +62,17 @@ class RecipeControllerSecurityTest {
 
     @BeforeEach
     fun setup() {
-        recipeService = mock()
-        recipeMapper = mock()
+//        recipeService = mock()
+//        recipeMapper = mock()
         whenever(recipeService.updateRecipe(eq(1L), any()))
             .thenReturn(Recipe(1L, "Updated", "Updated", null))
         whenever(recipeMapper.toDto(any(), any(), any()))
             .thenReturn(testRecipeDto)
 
-        val controller = RecipeController(recipeService, recipeMapper)
-        mockMvc = MockMvcBuilders.standaloneSetup(controller)
-            .apply { springSecurity() } // подключаем фильтры Security
-            .build()
+//        val controller = RecipeController(recipeService, recipeMapper)
+//        mockMvc = MockMvcBuilders.standaloneSetup(controller)
+//            .apply { springSecurity() } // подключаем фильтры Security
+//            .build()
     }
 
     @Test
@@ -103,6 +106,7 @@ class RecipeControllerSecurityTest {
     @Test
     fun `NOT LOGGED IN cannot update recipe`() {
         mockMvc.put("/api/recipes/1") {
+            with(anonymous()) // ← ключевой момент
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(TestRequest.validUpdateRecipeRequest())
         }.andExpect {
