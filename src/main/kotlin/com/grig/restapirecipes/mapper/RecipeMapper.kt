@@ -3,6 +3,7 @@ package com.grig.restapirecipes.mapper
 import com.grig.restapirecipes.dto.response.CategoryDto
 import com.grig.restapirecipes.dto.response.IngredientWithAmountDto
 import com.grig.restapirecipes.dto.response.RecipeDto
+import com.grig.restapirecipes.dto.response.UnitDto
 import com.grig.restapirecipes.model.CookingStep
 import com.grig.restapirecipes.model.Recipe
 import com.grig.restapirecipes.model.RecipeIngredient
@@ -36,7 +37,7 @@ object RecipeMapper {
                         id = requireNotNull(it.ingredient.id),
                         name = it.ingredient.name,
                         amount = it.amount,
-                        unit = it.ingredient.unit
+                        unit = UnitDto(it.unit.id, it.unit.code, it.unit.label)
                     )
                 },
 
@@ -49,8 +50,7 @@ object RecipeMapper {
                 id = requireNotNull(ri.ingredient.id),
                 name = ri.ingredient.name,
                 amount = ri.amount,
-
-                unit = ri.ingredient.unit
+                unit = UnitDto(ri.unit.id, ri.unit.code, ri.unit.label)
             )
         }
 }

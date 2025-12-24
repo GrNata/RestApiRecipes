@@ -24,18 +24,24 @@ class RecipeIngredient(
     @JoinColumn(name = "ingredient_id")
     val ingredient: Ingredient,
 
-    val amount: String?
+    @Column(name = "amount")
+    val amount: String?,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "unit_id")
+    val unit: UnitEntity
 
 ) {
     /** ✅ УДОБНЫЙ фабричный конструктор */
-    constructor(recipe: Recipe, ingredient: Ingredient, amount: String?) : this(
+    constructor(recipe: Recipe, ingredient: Ingredient, amount: String?, unit: UnitEntity) : this(
         id = RecipeIngredientId(
             recipeId = requireNotNull(recipe.id),
             ingredientId = requireNotNull(ingredient.id)
         ),
         recipe = recipe,
         ingredient = ingredient,
-        amount = amount
+        amount = amount,
+        unit = unit
     )
 
     override fun equals(other: Any?): Boolean {
@@ -56,12 +62,14 @@ class RecipeIngredient(
         fun of(
             recipe: Recipe,
             ingredient: Ingredient,
-            amount: String?
+            amount: String?,
+            unit: UnitEntity
         ) : RecipeIngredient {
             return RecipeIngredient(
                 recipe = recipe,
                 ingredient = ingredient,
-                amount = amount
+                amount = amount,
+                unit = unit
             )
         }
     }

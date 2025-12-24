@@ -33,7 +33,8 @@ class IngredientService(
 
     @PreAuthorize("hasRole('ADMIN')")
     fun createIngredient(request: IngredientRequest) : Ingredient {
-        val ingredient = Ingredient(request.name, request.unit)
+//        val ingredient = Ingredient(request.name, request.unit)
+        val ingredient = Ingredient(request.name)
         return ingredientRepository.save(ingredient)
     }
 
@@ -42,7 +43,7 @@ class IngredientService(
         val ingredient = ingredientRepository.findById(id)
             .orElseThrow { RecipeNotFoundException("Ingredient with id ${id} not found.") }
         ingredient.name = request.name
-        ingredient.unit = request.unit
+//        ingredient.unit = request.unit
         return ingredientRepository.save(ingredient)
     }
 

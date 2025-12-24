@@ -23,17 +23,29 @@ INSERT INTO category (name) VALUES
                                 ('Салаты'),
                                 ('Десерты');
 
-INSERT INTO ingredient (id, name, unit) VALUES
-                                  (1,'Картофель', 'г'),
-                                  (2,'Морковь', 'г'),
-                                  (3,'Свекла', 'г'),
-                                  (4,'Мясо', 'г'),
-                                  (5,'Яйца', 'шт'),
-                                  (6,'Мука', 'г'),
-                                  (7,'Молоко', 'мл'),
-                                  (8,'Сахар', 'г');
+INSERT INTO ingredient (id, name) VALUES
+                                  (1,'Картофель'),
+                                  (2,'Морковь'),
+                                  (3,'Свекла'),
+                                  (4,'Мясо'),
+                                  (5,'Яйца'),
+                                  (6,'Мука'),
+                                  (7,'Молоко'),
+                                  (8,'Сахар');
 -- Синхронизируем sequence с последним id
 SELECT setval('ingredient_id_seq', (SELECT MAX(id) FROM ingredient));
+
+
+-- Units (единицы измерения)
+INSERT INTO unit(code, label) VALUES
+                                  ('G', 'г'),
+                                  ('KG', 'кг'),
+                                  ('ML', 'мл'),
+                                  ('L', 'л'),
+                                  ('PCS', 'шт');
+
+
+
 
 INSERT INTO recipe (id, name, description, image, user_id) VALUES
                                                   (1,'Оливье', 'Классический новогодний салат', 'https://example.com/images/olivier.jpg', 1),
@@ -53,25 +65,25 @@ INSERT INTO recipe_category (recipe_id, category_id) VALUES (2, 1);
 INSERT INTO recipe_category (recipe_id, category_id) VALUES (3, 3);
 
 -- ИНГРЕДИЕНТЫ ОЛИВЬЕ
-INSERT INTO recipe_ingredient (recipe_id, ingredient_id, amount) VALUES
-                                                                     (1, 1, '2 шт'),
-                                                                     (1, 2, '1 шт'),
-                                                                     (1, 5, '3 шт'),
-                                                                     (1, 4, '200 г');
+INSERT INTO recipe_ingredient (recipe_id, ingredient_id, unit_id, amount) VALUES
+                                                                     (1, 1, 5, '2'),
+                                                                     (1, 2, 5, '1'),
+                                                                     (1, 5, 5, '3'),
+                                                                     (1, 4, 1, '200');
 
 -- ИНГРЕДИЕНТЫ БОРЩА
-INSERT INTO recipe_ingredient (recipe_id, ingredient_id, amount) VALUES
-                                                                     (2, 1, '3 шт'),
-                                                                     (2, 2, '1 шт'),
-                                                                     (2, 3, '1 шт'),
-                                                                     (2, 4, '300 г');
+INSERT INTO recipe_ingredient (recipe_id, ingredient_id, unit_id, amount) VALUES
+                                                                     (2, 1, 5, '3'),
+                                                                     (2, 2, 5, '1'),
+                                                                     (2, 3, 5, '1'),
+                                                                     (2, 4, 1, '300');
 
 -- ИНГРЕДИЕНТЫ ПАНКЕЙКОВ
-INSERT INTO recipe_ingredient (recipe_id, ingredient_id, amount) VALUES
-                                                                     (3, 6, '200 г'),
-                                                                     (3, 7, '250 мл'),
-                                                                     (3, 8, '50 г'),
-                                                                     (3, 5, '1 шт');
+INSERT INTO recipe_ingredient (recipe_id, ingredient_id, unit_id, amount) VALUES
+                                                                     (3, 6, 1, '200'),
+                                                                     (3, 7, 3, '250'),
+                                                                     (3, 8, 1, '50'),
+                                                                     (3, 5, 5,'1');
 
 -- 🔥 COOKING STEPS
 

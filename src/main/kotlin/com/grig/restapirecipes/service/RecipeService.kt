@@ -13,6 +13,7 @@ import com.grig.restapirecipes.repository.IngredientRepository
 import com.grig.restapirecipes.repository.RecipeIngredientRepository
 import com.grig.restapirecipes.repository.RecipeRepository
 import com.grig.restapirecipes.repository.StepRepository
+import com.grig.restapirecipes.repository.UnitRepository
 import com.grig.restapirecipes.repository.UserRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Sort
@@ -31,7 +32,8 @@ class RecipeService(
     private val stepRepository: StepRepository,
     private val categoryRepository: CategoryRepository,
     private val ingredientRepository: IngredientRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val unitRepository: UnitRepository
 ) {
 
     @Transactional(readOnly = true)
@@ -97,11 +99,15 @@ class RecipeService(
             val ingredient = ingredientRepository.findById(dto.ingredientId)
 //                .orElseThrow { IllegalArgumentException("Ingredient not found: ${dto.ingredientId}") }
                 .orElseThrow { RecipeNotFoundException("Ingredient not found: ${dto.ingredientId}") }
+            val unitEntity = unitRepository.findById(dto.unitId)
+                .orElseThrow { RecipeNotFoundException("Unit not found: ${dto.unitId}") }
+
             recipe.recipeIngredients.add(
                 RecipeIngredient(
                     recipe = recipe,
                     ingredient = ingredient,
-                    amount = dto.amount
+                    amount = dto.amount,
+                    unit = unitEntity
                 )
             )
         }
@@ -140,7 +146,10 @@ class RecipeService(
                 val ingredient = ingredientRepository.findById(dto.ingredientId)
 //                    .orElseThrow { RuntimeException("Ingredient not found: ${dto.ingredientId}") }
                     .orElseThrow { RecipeNotFoundException("Ingredient not found: ${dto.ingredientId}") }
-                recipe.recipeIngredients.add(RecipeIngredient(recipe, ingredient, dto.amount))
+                val unitEntity = unitRepository.findById(dto.unitId)
+                    .orElseThrow { RecipeNotFoundException("Unit not found: ${dto.unitId}") }
+
+                recipe.recipeIngredients.add(RecipeIngredient(recipe, ingredient, dto.amount, unitEntity))
             }
         }
 

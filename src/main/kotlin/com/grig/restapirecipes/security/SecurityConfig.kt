@@ -83,9 +83,23 @@ class SecurityConfig (
             .csrf { it.disable() }
             .headers { it.frameOptions { it.sameOrigin() } }
             .authorizeHttpRequests { auth ->
-                auth.requestMatchers("/h2-console/**", "/api/auth/**", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                auth
+                    .requestMatchers("/h2-console/**").permitAll()
+                    .requestMatchers("/api/auth/**").permitAll()
+                    .requestMatchers("/v3/api-docs/**").permitAll()
+                    .requestMatchers("/swagger-ui/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/recipes/**").permitAll() // явно GET
                     .anyRequest().authenticated()
             }
+//                auth.requestMatchers(
+//                    "/h2-console/**",
+//                    "/api/auth/**",
+//                    "/v3/api-docs/**",
+//                    "/swagger-ui/**",
+//                    "/api/recipes/**"
+//                ).permitAll()
+//                    .anyRequest().authenticated()
+//            }
         return http.build()
     }
 }

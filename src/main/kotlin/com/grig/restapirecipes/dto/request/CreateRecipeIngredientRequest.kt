@@ -8,5 +8,8 @@ data class CreateRecipeIngredientRequest(
     val ingredientId: Long,
 
     @field:NotBlank
-    val amount: String
+    val amount: String,
+
+    @field:NotBlank
+    val unitId: Long
 )

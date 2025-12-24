@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS recipe_ingredient CASCADE;
 DROP TABLE IF EXISTS recipe_category CASCADE;
 DROP TABLE IF EXISTS cooking_step CASCADE;
 DROP TABLE IF EXISTS ingredient CASCADE;
+DROP TABLE IF EXISTS unit CASCADE;
 DROP TABLE IF EXISTS category CASCADE;
 DROP TABLE IF EXISTS recipe CASCADE;
 
@@ -51,8 +52,14 @@ CREATE TABLE category (
 
 CREATE TABLE ingredient (
                             id BIGSERIAL PRIMARY KEY,
-                            name VARCHAR(255) NOT NULL UNIQUE,
-                            unit VARCHAR(50)
+                            name VARCHAR(255) NOT NULL UNIQUE
+--                             unit VARCHAR(50)
+);
+
+CREATE TABLE unit(
+    id BIGSERIAL PRIMARY KEY,
+    code VARCHAR(20) NOT NULL UNIQUE,
+    label VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE recipe (
@@ -73,6 +80,7 @@ CREATE TABLE recipe_category (
 CREATE TABLE recipe_ingredient (
                                    recipe_id BIGINT NOT NULL REFERENCES recipe(id) ON DELETE CASCADE,
                                    ingredient_id BIGINT NOT NULL REFERENCES ingredient(id) ON DELETE CASCADE,
+                                   unit_id BIGINT NOT NULL REFERENCES unit(id),
                                    amount VARCHAR(255),
                                    PRIMARY KEY (recipe_id, ingredient_id)
 );
