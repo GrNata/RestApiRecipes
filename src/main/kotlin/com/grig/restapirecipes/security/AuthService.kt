@@ -1,15 +1,12 @@
-package com.grig.restapirecipes.service
+package com.grig.restapirecipes.security
 
 import com.grig.restapirecipes.dto.RefreshTokenRequest
 import com.grig.restapirecipes.dto.TokenResponse
-import com.grig.restapirecipes.dto.user.request.LoginRequest
 import com.grig.restapirecipes.dto.user.request.RegisterRequest
 import com.grig.restapirecipes.dto.user.response.AuthResponse
-import com.grig.restapirecipes.model.RefreshToken
 import com.grig.restapirecipes.repository.RefreshTokenRepository
 import com.grig.restapirecipes.repository.RoleRepository
 import com.grig.restapirecipes.repository.UserRepository
-import com.grig.restapirecipes.security.JwtTokenProvider
 import com.grig.restapirecipes.user.model.User
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -50,7 +47,8 @@ class AuthService(
         return AuthResponse(
             token,
             user.username,
-            user.email)
+            user.email
+        )
     }
 
 //    fun login(request: LoginRequest) : AuthResponse {

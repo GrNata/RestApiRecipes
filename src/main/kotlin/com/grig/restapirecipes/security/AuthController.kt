@@ -5,7 +5,7 @@ import com.grig.restapirecipes.dto.TokenResponse
 import com.grig.restapirecipes.dto.user.request.LoginRequest
 import com.grig.restapirecipes.dto.user.request.RegisterRequest
 import com.grig.restapirecipes.dto.user.response.AuthResponse
-import com.grig.restapirecipes.service.AuthService
+import com.grig.restapirecipes.security.AuthService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid

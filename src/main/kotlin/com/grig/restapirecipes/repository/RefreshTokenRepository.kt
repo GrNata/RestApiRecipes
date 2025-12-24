@@ -10,4 +10,5 @@ interface RefreshTokenRepository : JpaRepository<RefreshToken, Long> {
     fun findByToken(token: String) : RefreshToken?
 
 //    fun save(token: RefreshToken)
+    override fun <S : RefreshToken> save(entity: S): S
 }

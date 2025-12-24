@@ -69,6 +69,9 @@ dependencies {
     // Mockito Kotlin
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.3.1")
 
+    // MockK для Kotlin
+    testImplementation("io.mockk:mockk:1.13.8")
+
     // Jackson Kotlin для тестов
     testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.2")
 //    БД H2 для тестов
