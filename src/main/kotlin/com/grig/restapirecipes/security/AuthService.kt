@@ -10,6 +10,7 @@ import com.grig.restapirecipes.repository.UserRepository
 import com.grig.restapirecipes.user.model.User
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
@@ -116,6 +117,16 @@ class AuthService(
             newAccessToken,
             newRefreshToken.token
         )
+    }
+
+    @Transactional
+    fun logout(refreshToken: String) {
+        refreshTokenRepository.deleteByToken(refreshToken)
+    }
+
+    @Transactional
+    fun logoutAll(userEmail: String) {
+        refreshTokenRepository.deleteAllByUserEmail(userEmail)
     }
 
 

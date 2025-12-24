@@ -9,6 +9,7 @@ import com.grig.restapirecipes.security.AuthService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -38,6 +39,25 @@ class AuthController(private val authService: AuthService) {
     fun refreshToken(@RequestBody request: RefreshTokenRequest) : ResponseEntity<TokenResponse> {
         return ResponseEntity.ok(authService.refreshToken(request))
     }
+
+    @Operation(summary = "lLogout (удалить текущий refresh token)")
+    @PostMapping("/logout")
+    fun logout(@RequestBody request: RefreshTokenRequest) {
+        authService.logout(request.refreshToken)
+    }
+
+//    logoutAll нужен, если:
+//✅ пользователь сменил пароль
+//✅ пользователь нажал «Выйти со всех устройств»
+//✅ администратор заблокировал пользователя
+//✅ украден refresh token
+//✅ Android → пользователь хочет «чистый выход»
+    @Operation(summary = "Logout from all devices")
+    @PostMapping("/logout-all")
+    fun logoutAll(authentication: Neo4jProperties.Authentication) {
+        authService.logoutAll(authentication.username)
+    }
+
 }
 
 //	•	LoginRequest → содержит email и пароль.

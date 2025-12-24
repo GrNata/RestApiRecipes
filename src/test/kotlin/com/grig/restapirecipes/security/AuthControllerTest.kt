@@ -3,16 +3,16 @@ package com.grig.restapirecipes.security
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.grig.restapirecipes.dto.RefreshTokenRequest
 import com.grig.restapirecipes.dto.TokenResponse
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestFactory
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
+import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -76,6 +76,13 @@ class AuthControllerTest {
         )
             .andExpect(status().isBadRequest)
             .andExpect(jsonPath("$.message").value("Invalid refresh token"))
+    }
+
+    @Test
+    @WithMockUser(username = "user@mail.ru")
+    fun `logoutAll returns 200`() {
+        mockMvc.post("/api/auth/logout-all")
+            .andExpect { status().isOk}
     }
 
 }

@@ -31,7 +31,8 @@ class GlobalExceptionHandler {
             ApiError(
                 status = 404,
                 error = "NOT_FOUND",
-                message = ex.message ?: "Recipe not found",
+//                message = ex.message ?: "Recipe not found",
+                message = ex.message,
                 path = request.requestURI
             )
         )
@@ -42,6 +43,7 @@ class GlobalExceptionHandler {
         ex: MethodArgumentNotValidException,
         request: HttpServletRequest
         ): ResponseEntity<ApiError> {
+
         val errors = ex.bindingResult.fieldErrors.associate {
             it.field to (it.defaultMessage ?: "Invalid value")
         }
@@ -73,7 +75,7 @@ class GlobalExceptionHandler {
             )
         )
 
-    // ========= 400 — IllegalArgument =========
+    // ========= 400 — IllegalArgumentException — ОСНОВА AuthService
     @ExceptionHandler(IllegalArgumentException::class)
     fun handleBadRequest(
         ex: IllegalArgumentException,
@@ -98,9 +100,7 @@ class GlobalExceptionHandler {
 //	•	уникальный email
 //	•	FK constraint
 //	•	duplicate key
-    @ExceptionHandler(
-        DataIntegrityViolationException::class
-    )
+    @ExceptionHandler(DataIntegrityViolationException::class)
     fun handleDataIntegrity(
         ex: DataIntegrityViolationException,
         request: HttpServletRequest
@@ -113,7 +113,7 @@ class GlobalExceptionHandler {
                 path = request.requestURI
             )
         )
-//Без метода handleHibernateConstraintViolation 409 не будет
+//Hibernate (ОБЯЗАТЕЛЕН!) - Без метода handleHibernateConstraintViolation 409 не будет
     @ExceptionHandler(org.hibernate.exception.ConstraintViolationException::class)
     fun handleHibernateConstraintViolation(
         ex: org.hibernate.exception.ConstraintViolationException,
@@ -128,7 +128,7 @@ class GlobalExceptionHandler {
             )
         )
 
-    // 401 Unauthorized для неавторизованных
+    // 401 Unauthorized для неавторизованных - Ошибки логина, JWT, refresh
     @ExceptionHandler(AuthenticationException::class)
     fun handleUnauthorized(
         ex: AuthenticationException,
@@ -138,7 +138,7 @@ class GlobalExceptionHandler {
             ApiError(
                 status = 401,
                 error = "UNAUTHORIZED",
-                message = ex.message,
+                message = ex.message ?: "Authentication failed",
                 path = request.requestURI
             )
         )

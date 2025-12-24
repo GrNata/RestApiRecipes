@@ -118,4 +118,13 @@ class AuthServiceTest {
         assertEquals("Refresh token expired", ex.message)
     }
 
+    @Test
+    fun `logoutAll remives all refresh tokens of user`() {
+        authService.logoutAll("user@mail.ru")
+        verify {
+            refreshTokenRepository.deleteAllByUserEmail("user@mail.ru")
+        }
+    }
+
+
 }
