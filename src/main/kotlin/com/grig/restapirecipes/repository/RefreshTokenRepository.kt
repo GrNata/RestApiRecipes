@@ -14,5 +14,5 @@ interface RefreshTokenRepository : JpaRepository<RefreshToken, Long> {
 
     fun deleteByToken(token: String)
 
-    fun deleteAllByUserEmail(email: String)
+    fun deleteAllByUserEmail(userEmail: String)
 }

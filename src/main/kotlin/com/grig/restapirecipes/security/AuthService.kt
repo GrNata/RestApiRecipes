@@ -1,5 +1,6 @@
 package com.grig.restapirecipes.security
 
+import com.grig.restapirecipes.dto.ChangePasswordRequest
 import com.grig.restapirecipes.dto.RefreshTokenRequest
 import com.grig.restapirecipes.dto.TokenResponse
 import com.grig.restapirecipes.dto.user.request.RegisterRequest
@@ -126,6 +127,22 @@ class AuthService(
 
     @Transactional
     fun logoutAll(userEmail: String) {
+        refreshTokenRepository.deleteAllByUserEmail(userEmail)
+    }
+
+    @Transactional
+    fun changePassword(userEmail: String, request: ChangePasswordRequest) {
+        val user = userRepository.findByEmail(userEmail)
+            ?: throw IllegalArgumentException("User not found")
+
+        if (!passwordEncoder.matches(request.oldPassword, user.password)) {
+            throw IllegalArgumentException("Invalid old password")
+        }
+
+        user.password = passwordEncoder.encode(request.newPassword)
+        userRepository.save(user)
+
+        // 🔥 ВАЖНО: отзываем ВСЕ refresh-токены
         refreshTokenRepository.deleteAllByUserEmail(userEmail)
     }
 

@@ -1,5 +1,6 @@
 package com.grig.restapirecipes.security
 
+import com.grig.restapirecipes.dto.ChangePasswordRequest
 import com.grig.restapirecipes.dto.RefreshTokenRequest
 import com.grig.restapirecipes.dto.TokenResponse
 import com.grig.restapirecipes.dto.user.request.LoginRequest
@@ -11,6 +12,9 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -56,6 +60,18 @@ class AuthController(private val authService: AuthService) {
     @PostMapping("/logout-all")
     fun logoutAll(authentication: Neo4jProperties.Authentication) {
         authService.logoutAll(authentication.username)
+    }
+
+    @Operation(summary = "Смена пароля пользователем (204 No Content, после этого нужно перелогиниться)")
+    @PostMapping("/change-password")
+    @PreAuthorize("isAuthenticated()")
+    fun changePassword(
+        @AuthenticationPrincipal user: UserDetails,
+        @RequestBody request: ChangePasswordRequest
+    ) : ResponseEntity<Void> {
+        authService.changePassword(user.username, request)
+
+        return ResponseEntity.noContent().build()
     }
 
 }

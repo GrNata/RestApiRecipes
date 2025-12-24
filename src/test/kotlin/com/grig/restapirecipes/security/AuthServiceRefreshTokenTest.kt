@@ -1,5 +1,6 @@
 package com.grig.restapirecipes.security
 
+import com.grig.restapirecipes.dto.ChangePasswordRequest
 import com.grig.restapirecipes.dto.RefreshTokenRequest
 import com.grig.restapirecipes.model.RefreshToken
 import com.grig.restapirecipes.repository.RefreshTokenRepository
@@ -20,7 +21,7 @@ import java.time.Instant
 import kotlin.test.assertEquals
 
 @ExtendWith(MockitoExtension::class)
-class AuthServiceTest {
+class AuthServiceRefreshTokenTest {
     @MockK
     lateinit var userRepository: UserRepository
 
@@ -123,6 +124,54 @@ class AuthServiceTest {
         authService.logoutAll("user@mail.ru")
         verify {
             refreshTokenRepository.deleteAllByUserEmail("user@mail.ru")
+        }
+    }
+
+    @Test
+    fun `changePassword revoke all refresh token`() {
+        val user = User(
+            id = 1L,
+            email = "user@mail.ru",
+            username = "user",
+            password = "encoded"
+        )
+
+        every { userRepository.findByEmail(user.email) } returns user
+        every { passwordEncoder.matches("old", "encoded") } returns true
+        every { passwordEncoder.encode("new") } returns "newEncoded"
+        every { userRepository.save(any()) } returns user
+
+        authService.changePassword(
+            user.email,
+            ChangePasswordRequest("old", "new")
+        )
+        verify {
+            refreshTokenRepository.deleteAllByUserEmail(user.email)
+        }
+    }
+
+//    Неверный старый пароль
+    @Test
+    fun `changePassword throw eception for invalid old password`() {
+        val user = User(
+            id = 1L,
+            email = "user@mail.ru",
+            username = "user",
+            password = "encoded"
+        )
+        every { userRepository.findByEmail(user.email) } returns user
+        every { passwordEncoder.matches("wrong", "encoded") } returns false
+
+        val ex = assertThrows<IllegalArgumentException> {
+            authService.changePassword(
+                user.email,
+                ChangePasswordRequest("wrong", "new")
+            )
+        }
+        assertEquals("Invalid old password", ex.message)
+
+        verify(exactly = 0) {
+            refreshTokenRepository.deleteAllByUserEmail(any())
         }
     }
 
