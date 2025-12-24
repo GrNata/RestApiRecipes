@@ -175,19 +175,19 @@ class GlobalExceptionHandler {
         )
     }
 
-//    для Auth добавь
-    @ExceptionHandler(IllegalArgumentException::class)
-    fun handleIllegalArgument(
-        ex: IllegalArgumentException,
-        request: HttpServletRequest
-    ) : ResponseEntity<ApiError> =
-            ResponseEntity.badRequest().body(
-                ApiError(
-                    status = 400,
-                    error = "BAD_REQUEST",
-                    message = ex.message,
-                    path = request.requestURI
-                )
-    )
+////    для Auth добавь
+//    @ExceptionHandler(IllegalArgumentException::class)
+//    fun handleIllegalArgument(
+//        ex: IllegalArgumentException,
+//        request: HttpServletRequest
+//    ) : ResponseEntity<ApiError> =
+//            ResponseEntity.badRequest().body(
+//                ApiError(
+//                    status = 400,
+//                    error = "BAD_REQUEST",
+//                    message = ex.message,
+//                    path = request.requestURI
+//                )
+//    )
 
 }
