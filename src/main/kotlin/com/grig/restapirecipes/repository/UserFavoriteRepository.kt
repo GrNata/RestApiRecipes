@@ -17,4 +17,6 @@ interface UserFavoriteRepository : JpaRepository<UserFavorite, UserFavoriteId> {
     fun findByUserAndRecipe(user: User, recipe: Recipe): UserFavorite?
 
     fun deleteByUserAndRecipe(user: User, recipe: Recipe)
+
+
 }

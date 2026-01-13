@@ -18,10 +18,10 @@ INSERT INTO user_roles (user_id, role_id) VALUES
 
 
 
-INSERT INTO category (name) VALUES
-                                ('Супы'),
-                                ('Салаты'),
-                                ('Десерты');
+INSERT INTO category (name, image) VALUES
+                                ('Супы', 'https://png.pngtree.com/png-vector/20250321/ourmid/pngtree-a-bowl-of-warm-chicken-soup-png-image_15818283.png'),
+                                ('Салаты', 'https://img.freepik.com/free-psd/fresh-vibrant-vegetable-salad-glass-bowl-transparent-background_84443-31142.jpg?semt=ais_hybrid&w=740'),
+                                ('Десерты', 'https://i.pinimg.com/736x/88/5e/98/885e984fec8dfb19af7086aafafef24f.jpg');
 
 INSERT INTO ingredient (id, name) VALUES
                                   (1,'Картофель'),
@@ -48,9 +48,15 @@ INSERT INTO unit(code, label) VALUES
 
 
 INSERT INTO recipe (id, name, description, image, user_id) VALUES
-                                                  (1,'Оливье', 'Классический новогодний салат', 'https://example.com/images/olivier.jpg', 1),
-                                                  (2, 'Борщ', 'Традиционный украинский борщ', 'https://example.com/images/borscht.jpg', 2),
-                                                  (3, 'Панкейки', 'Американские блинчики на молоке', 'https://example.com/images/pancakes.jpg', 1);
+                                                  (1,'Оливье', 'Классический новогодний салат', 'https://img.freepik.com/premium-psd/traditional-russian-salad-olivier-transparent-background_1269588-9267.jpg?semt=ais_hybrid', 1),
+                                                  (2, 'Борщ', 'Традиционный украинский борщ', 'https://thumbs.dreamstime.com/b/традиционный-украинский-борщ-с-мясом-суп-украинская-кухня-307968340.jpg', 2),
+                                                  (3, 'Панкейки', 'Американские блинчики на молоке', 'https://i.pinimg.com/736x/e0/bf/5a/e0bf5a1adef2226356cf8734a9509b9d.jpg', 1),
+                                                  (4,'Салат весенний', 'Весенний салат', 'https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy9yZWNpcGVzLzgzNDAzL2NvdmVycy9FVWo3eDguanBlZw.jpg', 2),
+                                                  (5, 'Суп весенний', 'Овощной суп', 'https://www.povarenok.ru/data/cache/2021sep/01/02/2896926_47607-640x480.jpg', 1),
+                                                  (6, 'Блинчики', 'Русские блины', 'https://img.freepik.com/premium-photo/stack-delicious-crepes-white-background_495423-49220.jpg?semt=ais_hybrid', 2),
+                                                  (7,'Салат мимоза', 'Любимый праздничный салат', 'https://img.povar.ru/main-micro/9f/c9/7d/71/salat_quotmimozaquot_s_plavlenim_sirom-176054.jpg', 2),
+                                                  (8, 'Солянка', 'Сытный суп, первое и второе одновременно', 'https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy9yZWNpcGVzLzEzMTMyMy9zdGVwcy8zZmN6VzguanBlZw.jpg', 1),
+                                                  (9, 'Мороженное', 'Лакомство для жаркого дня', 'https://i.pinimg.com/474x/3c/ff/0f/3cff0f0f9fb8174b34bbf53b4b856d03.jpg?nii=t', 2);
 
 -- Синхронизируем sequence с последним id
 SELECT setval('recipe_id_seq', (SELECT MAX(id) FROM recipe), true);
@@ -63,6 +69,18 @@ INSERT INTO recipe_category (recipe_id, category_id) VALUES (2, 1);
 
 -- ПАНКЕЙКИ → категории
 INSERT INTO recipe_category (recipe_id, category_id) VALUES (3, 3);
+-- Салат весенний → категории
+INSERT INTO recipe_category (recipe_id, category_id) VALUES (4, 2);
+-- Суп весенний → категории
+INSERT INTO recipe_category (recipe_id, category_id) VALUES (5, 1);
+-- Блинчики → категории
+INSERT INTO recipe_category (recipe_id, category_id) VALUES (6, 3);
+-- Салат мимоза → категории
+INSERT INTO recipe_category (recipe_id, category_id) VALUES (7, 2);
+-- Солянка → категории
+INSERT INTO recipe_category (recipe_id, category_id) VALUES (8, 1);
+-- Мороженое → категории
+INSERT INTO recipe_category (recipe_id, category_id) VALUES (9, 3);
 
 -- ИНГРЕДИЕНТЫ ОЛИВЬЕ
 INSERT INTO recipe_ingredient (recipe_id, ingredient_id, unit_id, amount) VALUES

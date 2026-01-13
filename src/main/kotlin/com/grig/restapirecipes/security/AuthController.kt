@@ -42,6 +42,16 @@ class AuthController(private val authService: AuthService) {
     @PostMapping("/refresh-token")
     fun refreshToken(@RequestBody request: RefreshTokenRequest) : ResponseEntity<TokenResponse> {
         return ResponseEntity.ok(authService.refreshToken(request))
+//        val refreshToken = refreshTokenService.verify(request.refreshToken)
+//        val user = refreshToken.user
+//
+//        val accessToken = jwtTokenProvider.generateToken(user) // user.email внутри
+//        val newRefreshToken = refreshTokenService.rotate(refreshToken)
+//
+//        return TokenResponse(
+//            accessToken = accessToken,
+//            refreshToken = newRefreshToken.token
+//        )
     }
 
     @Operation(summary = "lLogout (удалить текущий refresh token)")

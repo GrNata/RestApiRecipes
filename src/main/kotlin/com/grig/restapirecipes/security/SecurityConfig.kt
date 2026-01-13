@@ -21,7 +21,8 @@ import kotlin.jvm.java
 @EnableMethodSecurity(prePostEnabled = true)
 class SecurityConfig (
     private val customUserDetailsService: CustomUserDetailsService,
-    private val jwtTokenProvider: JwtTokenProvider
+    private val jwtTokenProvider: JwtTokenProvider,
+    private val jwtAuthenticationFilter: JwtAuthenticationFilter
 ) {
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
@@ -84,6 +85,9 @@ class SecurityConfig (
         http
             .csrf { it.disable() }
             .headers { it.frameOptions { it.sameOrigin() } }
+            .sessionManagement {
+                it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            }
             .authorizeHttpRequests { auth ->
                 auth
                     .requestMatchers("/h2-console/**").permitAll()
@@ -91,8 +95,13 @@ class SecurityConfig (
                     .requestMatchers("/v3/api-docs/**").permitAll()
                     .requestMatchers("/swagger-ui/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/recipes/**").permitAll() // явно GET
+//                    .requestMatchers(HttpMethod.GET, "/api/favorites").permitAll()   // <--- добавляем сюда
                     .anyRequest().authenticated()
             }
+            .addFilterBefore(
+                jwtAuthenticationFilter,
+                UsernamePasswordAuthenticationFilter::class.java
+            )
             .httpBasic(withDefaults()) // для админ-панели / unit-тестов
 //                auth.requestMatchers(
 //                    "/h2-console/**",

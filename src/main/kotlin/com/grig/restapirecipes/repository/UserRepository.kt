@@ -19,4 +19,6 @@ interface UserRepository : JpaRepository<User, Long> {
         WHERE u.email = :email
     """)
     fun findByEmailWithRoles(email: String): User?
+    fun findAllById(id: Long): MutableList<User>
+
 }

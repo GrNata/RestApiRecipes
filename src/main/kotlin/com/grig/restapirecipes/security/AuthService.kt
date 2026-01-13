@@ -9,6 +9,8 @@ import com.grig.restapirecipes.repository.RefreshTokenRepository
 import com.grig.restapirecipes.repository.RoleRepository
 import com.grig.restapirecipes.repository.UserRepository
 import com.grig.restapirecipes.user.model.User
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -43,8 +45,20 @@ class AuthService(
         )
         userRepository.save(user)
 
+        //  Создаём Authentication вручную
+        val authorities = user.roles.map {
+            SimpleGrantedAuthority(it.name)
+        }
+
+        val authentication = UsernamePasswordAuthenticationToken(
+            user.email,
+            null,
+            authorities
+        )
+
 //        val token = jwtTokenProvider.generateToken(user.email)
         val token = jwtTokenProvider.generateToken(user)
+//        val token = jwtTokenProvider.generateToken(authentication)
 
         return AuthResponse(
             token,

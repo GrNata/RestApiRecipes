@@ -25,7 +25,6 @@ class CustomUserDetailsService(
         return org.springframework.security.core.userdetails.User(
             user.email,
             user.password,
-//            emptyList()
             authorities
         )
     }

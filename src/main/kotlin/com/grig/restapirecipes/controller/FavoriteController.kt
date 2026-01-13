@@ -10,6 +10,9 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
 
 
 // FavoritesController (JWT защищенные методы)
@@ -20,6 +23,9 @@ class FavoriteController(
     private val favoriteService: FavoriteService,
     private val jwtTokenProvider: JwtTokenProvider
 ) {
+
+//    private val logger: Logger = LoggerFactory.getLogger(this::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(FavoriteController::class.java)
 
     private fun getCurrentUserEmail() : String {
         val authentication = SecurityContextHolder.getContext().authentication
@@ -53,10 +59,30 @@ class FavoriteController(
         summary = "Получить избранные рецепты пользователя",
         security = [SecurityRequirement(name = "bearerAuth")]
     )
+
     @GetMapping
-    fun listFavorite() : ResponseEntity<List<RecipeDto>> {
-        val userEmail = getCurrentUserEmail()
+    fun listFavorite(): ResponseEntity<List<RecipeDto>> {
+        println("Метод listFavorite() вызван")
+        logger.info("метод listFavorite()")
+        val authentication  = SecurityContextHolder.getContext().authentication
+        if (authentication == null || !authentication.isAuthenticated) {
+            // Незалогиненный пользователь — безопасно возвращаем пустой список
+            logger.info("Незалогиненный пользователь")
+            return ResponseEntity.ok(emptyList())
+        }
+        val userEmail = authentication.name
+
+        logger.info("Залогиненный пользователь userEmail: $userEmail")
+
         val favorites = favoriteService.listFavoritesByUser(userEmail)
         return ResponseEntity.ok(favorites)
     }
+
+//    @GetMapping
+//    fun listFavorite() : ResponseEntity<List<RecipeDto>> {
+//        val userEmail = getCurrentUserEmail()
+//        val favorites = favoriteService.listFavoritesByUser(userEmail)
+//        return ResponseEntity.ok(favorites)
+//    }
+
 }
