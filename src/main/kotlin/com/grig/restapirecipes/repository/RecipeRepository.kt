@@ -12,6 +12,11 @@ import org.springframework.stereotype.Repository
 @Repository
 interface RecipeRepository : JpaRepository<Recipe, Long>, JpaSpecificationExecutor<Recipe> {
 
+    fun findAllByCreateByEmail(
+        email: String,
+        pageable: Pageable
+    ) : Page<Recipe>
+
     @Query("""
         SELECT r FROM Recipe r
         LEFT JOIN FETCH r.categories

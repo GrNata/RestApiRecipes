@@ -4,14 +4,21 @@ import com.grig.restapirecipes.dto.request.CreateRecipeRequest
 import com.grig.restapirecipes.dto.response.RecipeDto
 import com.grig.restapirecipes.dto.request.UpdateRecipeRequest
 import com.grig.restapirecipes.mapper.RecipeMapper
+import com.grig.restapirecipes.model.Recipe
 import com.grig.restapirecipes.service.RecipeService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.*
 import java.lang.IllegalArgumentException
 
@@ -22,6 +29,33 @@ class RecipeController(
     private val recipeService : RecipeService,
     private val recipeMapper: RecipeMapper
     ){
+
+    @Operation(summary = "Получить рецепты текущего пользователя (Мои рецепты)")
+    @GetMapping("/my/recipes")
+    @PreAuthorize("isAuthenticated()")
+    fun getMyRecipes(
+        @AuthenticationPrincipal user: UserDetails,
+//        pageable: Pageable
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "10") size: Int,
+        @RequestParam(defaultValue = "id") sortBy: String,
+        @RequestParam(defaultValue = "DESC") direction: String
+    ) : Page<RecipeDto> {
+
+        // Проверяем, что sortBy — одно из допустимых полей сущности Recipe
+        val safeSortBy = when (sortBy) {
+            "id", "name" -> sortBy
+            else -> "id" // любое другое поле заменяем на id
+        }
+
+        val pageable = PageRequest.of(page, size, Sort.Direction.fromString(direction), safeSortBy)
+
+        // Получаем Page<Recipe> из сервиса
+        val recipesPage = recipeService.getMyRecipes(user.username, pageable)
+
+        // Преобразуем в Page<RecipeDto>
+        return recipeService.getMyRecipes(user.username, pageable)
+    }
 
     @Operation(summary = "Получить рецепт по id")
     @GetMapping("/{id}")

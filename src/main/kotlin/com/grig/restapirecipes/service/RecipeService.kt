@@ -18,6 +18,7 @@ import com.grig.restapirecipes.repository.UserRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Sort
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException
@@ -35,6 +36,17 @@ class RecipeService(
     private val userRepository: UserRepository,
     private val unitRepository: UnitRepository
 ) {
+
+    @Transactional(readOnly = true)
+    fun getMyRecipes(userEmail: String, pageable: Pageable) : Page<RecipeDto> {
+        val recipesPage: Page<Recipe> = recipeRepository.findAllByCreateByEmail(userEmail, pageable)
+
+        return recipesPage.map { recipe ->
+            val ingredients = recipeIngredientRepository.findIngredients(requireNotNull(recipe.id))
+            val steps = stepRepository.findSteps(requireNotNull(recipe.id))
+            RecipeMapper.toDto(recipe, ingredients, steps)
+        }
+    }
 
     @Transactional(readOnly = true)
     fun getAllRecipes() : List<RecipeDto>  =

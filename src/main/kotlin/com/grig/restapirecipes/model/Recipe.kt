@@ -33,14 +33,6 @@ class Recipe(
     )
     var categories: MutableSet<Category> = mutableSetOf(),
 
-//    @ManyToMany
-//    @JoinTable(
-//        name = "recipe_ingredient",
-//        joinColumns = [JoinColumn(name = "recipe_id")],
-//        inverseJoinColumns = [JoinColumn(name = "ingredient_id")]
-//    )
-//    var ingredients: MutableSet<Ingredient> = mutableSetOf(),
-
     @OneToMany(
         mappedBy = "recipe",
         cascade = [CascadeType.ALL],
