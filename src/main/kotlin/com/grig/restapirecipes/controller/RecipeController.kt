@@ -90,6 +90,11 @@ class RecipeController(
     @Operation(summary = "Создать новый рецепт")
     @PostMapping
     fun createRecipe(@RequestBody @Valid request: CreateRecipeRequest) : ResponseEntity<RecipeDto> {
+
+        println("Создание нового рецепта request: ${request}")
+        val auth = SecurityContextHolder.getContext().authentication
+        println("Создание нового рецепта auth: ${auth}")
+
         val userEmail = getCurrentUserEmail()
         val savedRecipe = recipeService.createRecipe(userEmail, request)
         val dto = recipeMapper.toDto(

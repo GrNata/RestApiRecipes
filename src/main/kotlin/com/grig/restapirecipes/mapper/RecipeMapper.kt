@@ -24,20 +24,22 @@ object RecipeMapper {
                 description = recipe.description,
                 image = recipe.image,
 
-                categories = recipe.categories.map {
-                    CategoryDto(
-                        id = requireNotNull(it.id),
-                        name = it.name,
-                        image = it.image
-                    )
-                },
+//                categories = recipe.categories.map {
+//                    CategoryDto(
+//                        id = requireNotNull(it.id),
+//                        name = it.name,
+//                        image = it.image
+//                    )
+//                },
+
+                categories = recipe.categories,
 
                 ingredients = ingredients.map {
                     IngredientWithAmountDto(
                         id = requireNotNull(it.ingredient.id),
                         name = it.ingredient.name,
                         amount = it.amount,
-                        unit = UnitDto(it.unit.id, it.unit.code, it.unit.label)
+                        unit = UnitDto(requireNotNull(it.unit.id), it.unit.code, it.unit.label)
                     )
                 },
 
@@ -50,7 +52,7 @@ object RecipeMapper {
                 id = requireNotNull(ri.ingredient.id),
                 name = ri.ingredient.name,
                 amount = ri.amount,
-                unit = UnitDto(ri.unit.id, ri.unit.code, ri.unit.label)
+                unit = UnitDto(requireNotNull(ri.unit.id), ri.unit.code, ri.unit.label)
             )
         }
 }

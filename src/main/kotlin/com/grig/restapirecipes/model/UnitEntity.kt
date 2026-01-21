@@ -7,11 +7,14 @@ import jakarta.persistence.*
 data class UnitEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0,
+//    val id: Long = 0,
+    val id: Long? = null,
 
     @Column(nullable = false, unique = true)
-    val code: String,   //      G, KG, ML, PCS
+    var code: String,   //      G, KG, ML, PCS
 
     @Column(nullable = false)
-    val label: String   //  г, кг, мл, шт
-)
+    var label: String   //  г, кг, мл, шт
+) {
+    constructor(code: String, label: String): this(null, code, label)
+}

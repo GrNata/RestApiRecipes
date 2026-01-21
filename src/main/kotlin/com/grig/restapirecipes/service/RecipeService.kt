@@ -103,7 +103,8 @@ class RecipeService(
             name = request.name,
             description = request.description,
             image = request.image,
-            categories = categories
+            categories = categories,
+            createBy = user
         )
         recipeRepository.save(recipe)
 
