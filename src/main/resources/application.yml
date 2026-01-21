@@ -22,8 +22,10 @@ spring:
     init:
       mode: always
 #      Явно укажи Spring, откуда брать schema.sql и data.sql
-      schema-locations: classpath:schema.sql
-      data-locations: classpath:data.sql
+#      schema-locations: classpath:schema.sql
+#      data-locations: classpath:data.sql
+      schema-locations: classpath:schema_new.sql
+      data-locations: classpath:data_new.sql
 
   jpa:
     hibernate:
