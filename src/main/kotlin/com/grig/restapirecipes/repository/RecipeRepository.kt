@@ -17,11 +17,13 @@ interface RecipeRepository : JpaRepository<Recipe, Long>, JpaSpecificationExecut
         pageable: Pageable
     ) : Page<Recipe>
 
-    @Query("""
+    @Query(
+        """
         SELECT r FROM Recipe r
         LEFT JOIN FETCH r.categories
         WHERE r.id = :id
-    """)
+    """
+    )
     fun findRecipeBase(id: Long): Recipe?
 
 

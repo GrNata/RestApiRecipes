@@ -32,6 +32,7 @@ class RecipeController(
 
     @Operation(summary = "Получить рецепты текущего пользователя (Мои рецепты)")
     @GetMapping("/my/recipes")
+    @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("isAuthenticated()")
     fun getMyRecipes(
         @AuthenticationPrincipal user: UserDetails,
@@ -59,6 +60,7 @@ class RecipeController(
 
     @Operation(summary = "Получить рецепт по id")
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     fun getRecipeById(@PathVariable id: Long) : ResponseEntity<RecipeDto> {
         val recipeDto = recipeService.getRecipeById(id)
         return ResponseEntity.ok(recipeDto)
@@ -75,6 +77,7 @@ class RecipeController(
 
     @Operation(summary = "Комбинированный поиск рецептов по названию и инградиенту, или все")
     @GetMapping("/search")
+    @ResponseStatus(HttpStatus.OK)
     fun search(
         @RequestParam(required = false) name: String?,
         @RequestParam(required = false) ingredient: String?
@@ -89,6 +92,7 @@ class RecipeController(
 
     @Operation(summary = "Создать новый рецепт")
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     fun createRecipe(@RequestBody @Valid request: CreateRecipeRequest) : ResponseEntity<RecipeDto> {
 
         println("Создание нового рецепта request: ${request}")
@@ -107,6 +111,7 @@ class RecipeController(
 
     @Operation(summary = "Редактировать рецепт")
     @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     fun updateRecipe(
         @PathVariable id: Long,
         @RequestBody @Valid request: UpdateRecipeRequest
@@ -126,6 +131,7 @@ class RecipeController(
 //	•	Всё выполняется в одной транзакции — если что-то пойдёт не так, откатится автоматически.
     @Operation(summary = "Удалить рецепт")
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteRecipe(@PathVariable id: Long) : ResponseEntity<Unit> {
         recipeService.deleteRecipe(id)
         return ResponseEntity.noContent().build()    // 204 No Content
@@ -135,6 +141,7 @@ class RecipeController(
 //    @GetMapping("/recipes")
     @Operation(summary = "Get recipes with optional search, pagination and sorting  (с поиском, по странице и сортировкой)")
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     fun searchPecipes(
         @RequestParam(required = false) name : String?,
         @RequestParam(required = false) ingredient: String?,

@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
 
@@ -22,6 +23,7 @@ class IngredientController(
 
     @Operation(summary = "Получить все инградиент")
     @GetMapping("/all")
+    @ResponseStatus(HttpStatus.OK)
     fun getAll() : List<IngredientDto> = ingredientService.getAllingredients()
 
     @Operation(summary = "Получить инградиент по id")
@@ -33,6 +35,7 @@ class IngredientController(
 //      @Operation(summary = "...") описывает эндпоинт в Swagger UI.
     @Operation(summary = "Get ingredients with optional search, pagination and sorting  (с поиском, по странице и сортировкой)")
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     fun getIngredients(
         @RequestParam(required = false) name: String?,
         @RequestParam(defaultValue = "0") page: Int,
@@ -57,15 +60,18 @@ class IngredientController(
 
     @Operation(summary = "Создать инградиент")
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     fun create(@RequestBody request: IngredientRequest) = ingredientService.createIngredient(request)
 
     @Operation(summary = "Редактировать инградиент")
     @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     fun update(@PathVariable id: Long, @RequestBody request: IngredientRequest) =
         ingredientService.updateIngredient(id, request)
 
     @Operation(summary = "Удалить инградиент")
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun delete(@PathVariable id: Long) {
         ingredientService.deleteIngredient(id)
     }

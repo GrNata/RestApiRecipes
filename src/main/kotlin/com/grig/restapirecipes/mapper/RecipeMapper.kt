@@ -1,6 +1,6 @@
 package com.grig.restapirecipes.mapper
 
-import com.grig.restapirecipes.dto.response.CategoryDto
+import com.grig.restapirecipes.dto.response.CategoryValueDto
 import com.grig.restapirecipes.dto.response.IngredientWithAmountDto
 import com.grig.restapirecipes.dto.response.RecipeDto
 import com.grig.restapirecipes.dto.response.UnitDto
@@ -24,15 +24,14 @@ object RecipeMapper {
                 description = recipe.description,
                 image = recipe.image,
 
-//                categories = recipe.categories.map {
-//                    CategoryDto(
-//                        id = requireNotNull(it.id),
-//                        name = it.name,
-//                        image = it.image
-//                    )
-//                },
-
-                categories = recipe.categories,
+                categoryValues = recipe.categories.associate { categoryValue ->
+                    categoryValue.categoryType.nameType to CategoryValueDto(
+                        id = requireNotNull(categoryValue.id),
+                        typeId = requireNotNull(categoryValue.categoryType.id),
+                        typeName = categoryValue.categoryType.nameType,
+                        categoryValue = categoryValue.categoryValue,
+                    )
+                },
 
                 ingredients = ingredients.map {
                     IngredientWithAmountDto(

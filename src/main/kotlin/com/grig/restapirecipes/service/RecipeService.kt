@@ -8,7 +8,7 @@ import com.grig.restapirecipes.mapper.RecipeMapper
 import com.grig.restapirecipes.model.CookingStep
 import com.grig.restapirecipes.model.Recipe
 import com.grig.restapirecipes.model.RecipeIngredient
-import com.grig.restapirecipes.repository.CategoryRepository
+import com.grig.restapirecipes.repository.CategoryValueRepository
 import com.grig.restapirecipes.repository.IngredientRepository
 import com.grig.restapirecipes.repository.RecipeIngredientRepository
 import com.grig.restapirecipes.repository.RecipeRepository
@@ -21,7 +21,6 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.security.access.prepost.PreAuthorize
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.lang.IllegalArgumentException
@@ -31,7 +30,8 @@ class RecipeService(
     private val recipeRepository: RecipeRepository,
     private val recipeIngredientRepository: RecipeIngredientRepository,
     private val stepRepository: StepRepository,
-    private val categoryRepository: CategoryRepository,
+//    private val categoryRepository: CategoryRepository,
+    private val categoryValueRepository: CategoryValueRepository,
     private val ingredientRepository: IngredientRepository,
     private val userRepository: UserRepository,
     private val unitRepository: UnitRepository
@@ -97,13 +97,21 @@ class RecipeService(
             ?: throw IllegalArgumentException("User not found: ${userEmail}")
 //            ?: throw AuthenticationCredentialsNotFoundException("User not found: ${userEmail}")
 
-        val categories = categoryRepository.findAllById(request.categoryIds).toMutableSet()
+        val categoryValues = categoryValueRepository.findAllById(request.categoryValueIds).toMutableSet()
+//        val categories = categoryRepository.findAllById(request.categoryIds).toMutableSet()
+
+//        Проверку: 1 значение на 1 тип (Это защитит бизнес-логику)
+        val dublicatedTypes = categoryValues.groupBy { it.categoryType.id }.filter { it.value.size > 1 }
+        if (dublicatedTypes.isNullOrEmpty()) {
+            throw IllegalArgumentException("Only one category per type is allowed")
+        }
 
         val recipe = Recipe(
             name = request.name,
             description = request.description,
             image = request.image,
-            categories = categories,
+            categories = categoryValues,
+//            categories = categories,
             createBy = user
         )
         recipeRepository.save(recipe)
@@ -150,7 +158,8 @@ class RecipeService(
 
         request.categoryIds?.let {
             recipe.categories.clear()
-            recipe.categories.addAll(categoryRepository.findAllById(it))
+            recipe.categories.addAll(categoryValueRepository.findAllById(it))
+//            recipe.categories.addAll(categoryRepository.findAllById(it))
         }
 
         request.ingredients?.let {

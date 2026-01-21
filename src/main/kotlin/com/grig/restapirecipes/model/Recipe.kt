@@ -31,7 +31,7 @@ class Recipe(
         joinColumns = [JoinColumn(name = "recipe_id")],
         inverseJoinColumns = [JoinColumn(name = "category_value_id")]
     )
-    var categories: MutableSet<Category> = mutableSetOf(),
+    var categories: MutableSet<CategoryValue> = mutableSetOf(),
 //    @ManyToMany
 //    @JoinTable(
 //        name = "recipe_category",

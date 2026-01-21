@@ -8,10 +8,19 @@ data class CreateRecipeRequest(
     @field:NotBlank val name: String,
     @field:NotBlank val description: String,
     val image: String?,
-    @field:NotEmpty val categoryIds: List<Long>,
+    @field:NotEmpty val categoryValueIds: List<Long>,       // id выбранных CategoryValue
     @field:NotEmpty val ingredients: List<CreateRecipeIngredientRequest>,
     @field:NotEmpty val steps: List<String>
 )
+//
+//data class CreateRecipeRequest(
+//    @field:NotBlank val name: String,
+//    @field:NotBlank val description: String,
+//    val image: String?,
+//    @field:NotEmpty val categoryIds: List<Long>,
+//    @field:NotEmpty val ingredients: List<CreateRecipeIngredientRequest>,
+//    @field:NotEmpty val steps: List<String>
+//)
 
 
 

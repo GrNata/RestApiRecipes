@@ -38,6 +38,7 @@ class FavoriteController(
         security = [SecurityRequirement(name = "bearerAuth")]
     )
     @PostMapping("/{recipeId}")
+    @ResponseStatus(HttpStatus.CREATED)
     fun addFavorite(@PathVariable recipeId: Long) : ResponseEntity<Unit> {
         val userEmail = getCurrentUserEmail()
         favoriteService.addFavorite(userEmail, recipeId)
@@ -49,6 +50,7 @@ class FavoriteController(
         security = [SecurityRequirement(name = "bearerAuth")]
     )
     @DeleteMapping("/{recipeId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun removeFavorite(@PathVariable recipeId: Long) : ResponseEntity<Unit> {
         val userEmail = getCurrentUserEmail()
         favoriteService.removeFavorite(userEmail, recipeId)
@@ -61,6 +63,7 @@ class FavoriteController(
     )
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     fun listFavorite(): ResponseEntity<List<RecipeDto>> {
         println("Метод listFavorite() вызван")
         logger.info("метод listFavorite()")
