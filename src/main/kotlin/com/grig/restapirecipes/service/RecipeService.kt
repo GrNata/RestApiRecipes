@@ -110,6 +110,7 @@ class RecipeService(
             name = request.name,
             description = request.description,
             image = request.image,
+            baseServings = request.baseServings,
             categories = categoryValues,
 //            categories = categories,
             createBy = user
@@ -155,6 +156,7 @@ class RecipeService(
         request.name?.let { recipe.name = it }
         request.description?.let { recipe.description = it }
         request.image?.let { recipe.image = it }
+        request.baseServings?.let { recipe.baseServings = it }
 
         request.categoryIds?.let {
             recipe.categories.clear()

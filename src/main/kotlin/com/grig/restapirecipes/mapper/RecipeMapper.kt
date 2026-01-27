@@ -23,6 +23,7 @@ object RecipeMapper {
                 name = recipe.name,
                 description = recipe.description,
                 image = recipe.image,
+                baseServings = recipe.baseServings,
 
                 categoryValues = recipe.categories.associate { categoryValue ->
                     categoryValue.categoryType.nameType to CategoryValueDto(

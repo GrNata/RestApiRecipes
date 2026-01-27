@@ -86,17 +86,51 @@ INSERT INTO unit (code, label) VALUES
                                    ('PCS', 'шт');
 
 -- 8. Добавляем рецепты (без изменений)
-INSERT INTO recipe (id, name, description, image, user_id) VALUES
-                                                               (1, 'Оливье', 'Классический новогодний салат', 'https://img.freepik.com/premium-psd/traditional-russian-salad-olivier-transparent-background_1269588-9267.jpg?semt=ais_hybrid', 1),
-                                                               (2, 'Борщ', 'Традиционный украинский борщ', 'https://thumbs.dreamstime.com/b/традиционный-украинский-борщ-с-мясом-суп-украинская-кухня-307968340.jpg', 2),
-                                                               (3, 'Панкейки', 'Американские блинчики на молоке', 'https://i.pinimg.com/736x/e0/bf/5a/e0bf5a1adef2226356cf8734a9509b9d.jpg', 1),
-                                                               (4, 'Салат весенний', 'Весенний салат', 'https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy9yZWNpcGVzLzgzNDAzL2NvdmVycy9FVWo3eDguanBlZw.jpg', 2),
-                                                               (5, 'Суп весенний', 'Овощной суп', 'https://www.povarenok.ru/data/cache/2021sep/01/02/2896926_47607-640x480.jpg', 1),
-                                                               (6, 'Блинчики', 'Русские блины', 'https://img.freepik.com/premium-photo/stack-delicious-crepes-white-background_495423-49220.jpg?semt=ais_hybrid', 2),
-                                                               (7, 'Салат мимоза', 'Любимый праздничный салат', 'https://img.povar.ru/main-micro/9f/c9/7d/71/salat_quotmimozaquot_s_plavlenim_sirom-176054.jpg', 2),
-                                                               (8, 'Солянка', 'Сытный суп, первое и второе одновременно', 'https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy9yZWNpcGVzLzEzMTMyMy9zdGVwcy8zZmN6VzguanBlZw.jpg', 1),
-                                                               (9, 'Мороженное', 'Лакомство для жаркого дня', 'https://i.pinimg.com/474x/3c/ff/0f/3cff0f0f9fb8174b34bbf53b4b856d03.jpg?nii=t', 2);
+INSERT INTO recipe (id, name, description, image, base_servings, user_id) VALUES
+-- Оливье — обычно 4 порции
+(1, 'Оливье', 'Классический новогодний салат',
+ 'https://img.freepik.com/premium-psd/traditional-russian-salad-olivier-transparent-background_1269588-9267.jpg?semt=ais_hybrid',
+ 4, 1),
 
+-- Борщ — 4 порции
+(2, 'Борщ', 'Традиционный украинский борщ',
+ 'https://thumbs.dreamstime.com/b/традиционный-украинский-борщ-с-мясом-суп-украинская-кухня-307968340.jpg',
+ 4, 2),
+
+-- Панкейки — 2 порции
+(3, 'Панкейки', 'Американские блинчики на молоке',
+ 'https://i.pinimg.com/736x/e0/bf/5a/e0bf5a1adef2226356cf8734a9509b9d.jpg',
+ 2, 1),
+
+-- Салат весенний — 2 порции
+(4, 'Салат весенний', 'Весенний салат',
+ 'https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy9yZWNpcGVzLzgzNDAzL2NvdmVycy9FVWo3eDguanBlZw.jpg',
+ 2, 2),
+
+-- Суп весенний — 4 порции
+(5, 'Суп весенний', 'Овощной суп',
+ 'https://www.povarenok.ru/data/cache/2021sep/01/02/2896926_47607-640x480.jpg',
+ 4, 1),
+
+-- Блинчики — 3 порции
+(6, 'Блинчики', 'Русские блины',
+ 'https://img.freepik.com/premium-photo/stack-delicious-crepes-white-background_495423-49220.jpg?semt=ais_hybrid',
+ 3, 2),
+
+-- Салат мимоза — 4 порции
+(7, 'Салат мимоза', 'Любимый праздничный салат',
+ 'https://img.povar.ru/main-micro/9f/c9/7d/71/salat_quotmimozaquot_s_plavlenim_sirom-176054.jpg',
+ 4, 2),
+
+-- Солянка — 4 порции
+(8, 'Солянка', 'Сытный суп, первое и второе одновременно',
+ 'https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy9yZWNpcGVzLzEzMTMyMy9zdGVwcy8zZmN6VzguanBlZw.jpg',
+ 4, 1),
+
+-- Мороженое — 2 порции
+(9, 'Мороженное', 'Лакомство для жаркого дня',
+ 'https://i.pinimg.com/474x/3c/ff/0f/3cff0f0f9fb8174b34bbf53b4b856d03.jpg?nii=t',
+ 2, 2);
 
 SELECT setval('recipe_id_seq', (SELECT MAX(id) FROM recipe), true);
 

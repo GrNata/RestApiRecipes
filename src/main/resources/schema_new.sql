@@ -65,6 +65,7 @@ CREATE TABLE recipe (
                         name VARCHAR(255) NOT NULL,
                         description TEXT,
                         image VARCHAR(500),
+                        base_servings INT NOT NULL DEFAULT 1,
                         user_id BIGINT REFERENCES users(id) ON DELETE SET NULL  -- если пользователь удалён
 );
 

@@ -2,6 +2,7 @@ package com.grig.restapirecipes.model
 
 import com.grig.restapirecipes.user.model.User
 import jakarta.persistence.*
+import jakarta.validation.constraints.Min
 
 @Entity
 @Table(name = "recipe")
@@ -20,6 +21,11 @@ class Recipe(
 
 //    @Column(length = 500)
     var image: String? = null,
+
+//    кол-во порций
+    @Min(1)
+    @Column(name = "base_servings", nullable = false)
+    var baseServings: Int = 1,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
