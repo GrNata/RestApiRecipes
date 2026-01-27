@@ -1,6 +1,7 @@
 package com.grig.restapirecipes.controller
 
 import com.grig.restapirecipes.dto.request.CreateRecipeRequest
+import com.grig.restapirecipes.dto.request.RecipeSearchByIngredientRequest
 import com.grig.restapirecipes.dto.response.RecipeDto
 import com.grig.restapirecipes.dto.request.UpdateRecipeRequest
 import com.grig.restapirecipes.mapper.RecipeMapper
@@ -150,7 +151,27 @@ class RecipeController(
         @RequestParam(defaultValue = "name") sortBy: String,
         @RequestParam(defaultValue = "ASC") direction: String
     ) : Page<RecipeDto> {
-        return recipeService.searchRecipes(name, ingredient, page, size, sortBy, direction)
+        val response = recipeService.searchRecipes(name, ingredient, page, size, sortBy, direction)
+
+        println("CATEGORY-ch RecipeCOntroller: recipes: ${response.toList()}")
+
+        return response
+    }
+
+    @Operation(summary = "Поиск рецептов по ингредиентам, в которые входят все ингредиенты (от 1 до 10 ингредиента)")
+    @PostMapping("/search/by-ingredients")
+//    @GetMapping("/search/by-ingredients")
+//    @ResponseStatus(HttpStatus.OK)
+    fun searchByIngredients(
+        @RequestBody request: RecipeSearchByIngredientRequest
+    ) : List<RecipeDto> {
+        if (request.ingredientIds.isEmpty() || request.ingredientIds.size > 10) {
+            throw kotlin.IllegalArgumentException("Ingredients count must be from 1 to 10")
+        }
+        val response = recipeService.searchByIngredients(request.ingredientIds)
+
+        println("SEARCH-BY-INGREDIENTS: ${response}")
+        return response
     }
 
 }

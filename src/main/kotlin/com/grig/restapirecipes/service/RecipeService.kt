@@ -102,7 +102,7 @@ class RecipeService(
 
 //        Проверку: 1 значение на 1 тип (Это защитит бизнес-логику)
         val dublicatedTypes = categoryValues.groupBy { it.categoryType.id }.filter { it.value.size > 1 }
-        if (dublicatedTypes.isNullOrEmpty()) {
+        if (dublicatedTypes.isNotEmpty()) {
             throw IllegalArgumentException("Only one category per type is allowed")
         }
 
@@ -224,10 +224,26 @@ class RecipeService(
             recipeRepository.findAll(pageable)
         }
 
+        println("CATEGORY-ch RecipeService: recipes: ${recipesPage.toList()}")
+
         return recipesPage.map { recipe ->
             val ingredients = recipeIngredientRepository.findIngredients(requireNotNull(recipe.id))
             val staps = stepRepository.findSteps(requireNotNull(recipe.id))
             RecipeMapper.toDto(recipe, ingredients, staps)
+        }
+    }
+
+    //    Поис рецептов по ингредиентам
+    @Transactional(readOnly = true)
+    fun searchByIngredients(ingredientIds: List<Long>): List<RecipeDto> {
+        val recipes = recipeRepository.findAllIngredients(
+            ingredientIds = ingredientIds,
+            count = ingredientIds.size.toLong()
+        )
+        return recipes.map { recipe ->
+            val ingredients = recipeIngredientRepository.findIngredients(requireNotNull(recipe.id))
+            val steps = stepRepository.findSteps(requireNotNull(recipe.id))
+            RecipeMapper.toDto(recipe, ingredients, steps)
         }
     }
 

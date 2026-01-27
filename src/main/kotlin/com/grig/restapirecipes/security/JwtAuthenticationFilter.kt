@@ -1,5 +1,6 @@
 package com.grig.restapirecipes.security
 
+import io.jsonwebtoken.ExpiredJwtException
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -9,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
+import java.lang.Exception
 
 //@Profile("prod")        // Оставляем БЕЗ JWT для unit-тестов:
 @Component
@@ -36,24 +38,44 @@ class JwtAuthenticationFilter(
             return
         }
 
-        val email = jwtTokenProvider.getEmailFromJWT(token)
-        println("JwtAuthenticationFilter - email = $email")
+        try {
+            val email = jwtTokenProvider.getEmailFromJWT(token)
+            println("JwtAuthenticationFilter - email = $email")
 
-        //  защита от пустого subject
-        if (email.isNullOrBlank()) {
+            //  защита от пустого subject
+            if (email.isNullOrBlank()) {
+                filterChain.doFilter(request, response)
+                return
+            }
+
+            //  не затираем уже установленную аутентификацию
+            if (SecurityContextHolder.getContext().authentication == null) {
+                val userDetails = userDetailsService.loadUserByUsername(email)
+
+                val authentication = UsernamePasswordAuthenticationToken(
+                    userDetails,
+                    null,
+                    userDetails.authorities
+                )
+                println("authorities = ${userDetails.authorities}")
+
+                authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
+                SecurityContextHolder.getContext().authentication = authentication
+
+            }
+        } catch (e: ExpiredJwtException) {
+            println("JWT expired - continue as anonymous")
+            filterChain.doFilter(request, response)
+            return
+        } catch (e: Exception) {
+            println("JWT invalid - continue as anonymous")
             filterChain.doFilter(request, response)
             return
         }
 
-        //  не затираем уже установленную аутентификацию
-        if (SecurityContextHolder.getContext().authentication == null) {
-            val userDetails = userDetailsService.loadUserByUsername(email)
+        filterChain.doFilter(request, response)
 
-            val authentication = UsernamePasswordAuthenticationToken(
-                userDetails,
-                null,
-                userDetails.authorities
-            )
+
 
 //        if (!token.isNullOrEmpty() && jwtTokenProvider.validateToken(token)) {
 //            println("JwtAuthenticationFilter - token not NULL")
@@ -68,11 +90,8 @@ class JwtAuthenticationFilter(
 //                userDetails, null, userDetails.authorities
 //            )
 
-            println("authorities = ${userDetails.authorities}")
 
-            authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
-            SecurityContextHolder.getContext().authentication = authentication
-        }
-        filterChain.doFilter(request, response)
+
+//        filterChain.doFilter(request, response)
     }
 }

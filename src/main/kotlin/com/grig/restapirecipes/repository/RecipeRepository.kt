@@ -40,6 +40,18 @@ interface RecipeRepository : JpaRepository<Recipe, Long>, JpaSpecificationExecut
         @Param("ingredient") ingredient: String?
     ) : List<Recipe>
 
+//    Поис рецептов по ингредиентам
+    @Query("""
+        SELECT r FROM Recipe r
+        JOIN r.recipeIngredients ri
+        WHERE ri.ingredient.id IN :ingredientIds
+        GROUP BY r.id
+        HAVING COUNT(DISTINCT ri.ingredient.id) = :count
+    """)
+    fun findAllIngredients(ingredientIds: List<Long>, count: Long): List<Recipe>
+
+
+
 //    Pagination + Sort
 //    Pagination (пагинация) — это разбиение большого списка данных на страницы, чтобы клиент мог получать их частями, например:
 //	•	10 рецептов на странице,

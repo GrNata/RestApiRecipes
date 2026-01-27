@@ -141,23 +141,102 @@ INSERT INTO recipe_category (recipe_id, category_value_id) VALUES
                                                                (9, 3);
 
 
--- -- Салат весенний → «Салат» и «Весенний»
--- INSERT INTO recipe_category (recipe_id, category_value_id) VALUES
---                                                                (4, 1),  -- «Салат»
---                                                                (4, 9);  -- «Весенний»
+-- 10.  INSERT INTO recipe_ingredient
+-- === Оливье (1) ===
+INSERT INTO recipe_ingredient (recipe_id, ingredient_id, unit_id, amount) VALUES
+                                                                              (1, 1, (SELECT id FROM unit WHERE code = 'KG'), '0.5'),
+                                                                              (1, 2, (SELECT id FROM unit WHERE code = 'G'),  '200'),
+                                                                              (1, 5, (SELECT id FROM unit WHERE code = 'PCS'),'4');
+
+-- === Борщ (2) ===
+INSERT INTO recipe_ingredient (recipe_id, ingredient_id, unit_id, amount) VALUES
+                                                                              (2, 1, (SELECT id FROM unit WHERE code = 'G'),  '300'),
+                                                                              (2, 2, (SELECT id FROM unit WHERE code = 'G'),  '150'),
+                                                                              (2, 3, (SELECT id FROM unit WHERE code = 'G'),  '200'),
+                                                                              (2, 4, (SELECT id FROM unit WHERE code = 'KG'), '0.6');
+
+-- === Панкейки (3) ===
+INSERT INTO recipe_ingredient (recipe_id, ingredient_id, unit_id, amount) VALUES
+                                                                              (3, 6, (SELECT id FROM unit WHERE code = 'G'),  '250'),
+                                                                              (3, 7, (SELECT id FROM unit WHERE code = 'ML'), '300'),
+                                                                              (3, 5, (SELECT id FROM unit WHERE code = 'PCS'),'2'),
+                                                                              (3, 8, (SELECT id FROM unit WHERE code = 'G'),  '50');
+
+-- === Салат весенний (4) ===
+INSERT INTO recipe_ingredient (recipe_id, ingredient_id, unit_id, amount) VALUES
+                                                                              (4, 1, (SELECT id FROM unit WHERE code = 'G'),  '300'),
+                                                                              (4, 2, (SELECT id FROM unit WHERE code = 'G'),  '150'),
+                                                                              (4, 5, (SELECT id FROM unit WHERE code = 'PCS'),'2');
+
+-- === Суп весенний (5) ===
+INSERT INTO recipe_ingredient (recipe_id, ingredient_id, unit_id, amount) VALUES
+                                                                              (5, 1, (SELECT id FROM unit WHERE code = 'G'), '200'),
+                                                                              (5, 2, (SELECT id FROM unit WHERE code = 'G'), '100'),
+                                                                              (5, 3, (SELECT id FROM unit WHERE code = 'G'), '150');
+
+-- === Блинчики (6) ===
+INSERT INTO recipe_ingredient (recipe_id, ingredient_id, unit_id, amount) VALUES
+                                                                              (6, 6, (SELECT id FROM unit WHERE code = 'G'),  '300'),
+                                                                              (6, 7, (SELECT id FROM unit WHERE code = 'ML'), '500'),
+                                                                              (6, 5, (SELECT id FROM unit WHERE code = 'PCS'),'3');
+
+-- === Салат Мимоза (7) ===
+INSERT INTO recipe_ingredient (recipe_id, ingredient_id, unit_id, amount) VALUES
+                                                                              (7, 5, (SELECT id FROM unit WHERE code = 'PCS'),'4'),
+                                                                              (7, 2, (SELECT id FROM unit WHERE code = 'G'),  '200');
+
+-- === Солянка (8) ===
+INSERT INTO recipe_ingredient (recipe_id, ingredient_id, unit_id, amount) VALUES
+                                                                              (8, 4, (SELECT id FROM unit WHERE code = 'KG'), '0.7'),
+                                                                              (8, 1, (SELECT id FROM unit WHERE code = 'G'),  '200'),
+                                                                              (8, 2, (SELECT id FROM unit WHERE code = 'G'),  '150');
+
+-- === Мороженое (9) ===
+INSERT INTO recipe_ingredient (recipe_id, ingredient_id, unit_id, amount) VALUES
+                                                                              (9, 7, (SELECT id FROM unit WHERE code = 'ML'), '500'),
+                                                                              (9, 8, (SELECT id FROM unit WHERE code = 'G'), '150');
+
 --
---
--- -- Суп весенний → «Суп» и «Весенний»
--- INSERT INTO recipe_category (recipe_id, category_value_id) VALUES
---                                                                (5, 2),  -- «Суп»
---                                                                (5, 9);  -- «Весенний»
---
---
--- -- Блинчики → «Основное блюдо» и «Русская»
--- INSERT INTO recipe_category (recipe_id, category_value_id) VALUES
---                                                                (6, 4),  -- «Основное блюдо»
---                                                                (6, 5);  -- «Русская»
---
---
--- -- Салат мимоза → «Салат»
--- INSERT INTO recipe_category (recipe_id, category_value_id)
+-- 12. Добавляем шаги приготовления для рецептов
+INSERT INTO cooking_step (recipe_id, step_number, description) VALUES
+                                                                   -- Оливье
+                                                                   (1, 1, 'Отварить картофель и морковь'),
+                                                                   (1, 2, 'Нарезать овощи и яйца кубиками'),
+                                                                   (1, 3, 'Смешать все ингредиенты с майонезом'),
+
+                                                                   -- Борщ
+                                                                   (2, 1, 'Отварить мясо до готовности'),
+                                                                   (2, 2, 'Добавить нарезанную свеклу и морковь'),
+                                                                   (2, 3, 'Добавить капусту и приправы, варить до готовности'),
+
+                                                                   -- Панкейки
+                                                                   (3, 1, 'Смешать муку, молоко, яйца и сахар'),
+                                                                   (3, 2, 'Разогреть сковороду и обжаривать тесто'),
+                                                                   (3, 3, 'Сервировать с сиропом или ягодами'),
+
+                                                                   -- Салат весенний
+                                                                   (4, 1, 'Нарезать свежие овощи'),
+                                                                   (4, 2, 'Смешать с зеленью и заправкой'),
+
+                                                                   -- Суп весенний
+                                                                   (5, 1, 'Нарезать овощи'),
+                                                                   (5, 2, 'Отварить овощи в бульоне'),
+                                                                   (5, 3, 'Добавить соль и специи'),
+
+                                                                   -- Блинчики
+                                                                   (6, 1, 'Смешать муку, молоко, яйца и сахар'),
+                                                                   (6, 2, 'Выпекать на сковороде тонкие блины'),
+                                                                   (6, 3, 'Сервировать с начинкой по вкусу'),
+
+                                                                   -- Салат мимоза
+                                                                   (7, 1, 'Нарезать яйца, рыбу и сыр'),
+                                                                   (7, 2, 'Сложить слоями с майонезом'),
+
+                                                                   -- Солянка
+                                                                   (8, 1, 'Нарезать мясо и колбасу'),
+                                                                   (8, 2, 'Добавить огурцы, маслины и бульон'),
+                                                                   (8, 3, 'Варить до готовности и подать с лимоном'),
+
+                                                                   -- Мороженное
+                                                                   (9, 1, 'Смешать ингредиенты для мороженного'),
+                                                                   (9, 2, 'Заморозить до готовности');

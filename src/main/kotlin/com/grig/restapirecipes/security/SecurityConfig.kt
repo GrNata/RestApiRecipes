@@ -94,7 +94,13 @@ class SecurityConfig (
                     .requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers("/v3/api-docs/**").permitAll()
                     .requestMatchers("/swagger-ui/**").permitAll()
+                    //  Публичные справочники
+                    .requestMatchers(HttpMethod.GET, "/api/category-type/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/ingredients/**").permitAll()
+                    // Публичные рецепты
                     .requestMatchers(HttpMethod.GET, "/api/recipes/**").permitAll() // явно GET
+                    // сделать поиск по ингредиентам публичным (POST)
+                    .requestMatchers(HttpMethod.POST, "/api/recipes/search/by-ingredients").permitAll()
 //                    .requestMatchers(HttpMethod.GET, "/api/favorites").permitAll()   // <--- добавляем сюда
                     .anyRequest().authenticated()
             }

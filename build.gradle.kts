@@ -34,6 +34,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-security")
 
+    // Hibernate Commons Annotations (для Hibernate 6.6.x)
+//    implementation("org.hibernate.orm:hibernate-core")
+
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     // PostgreSQL
     implementation("org.postgresql:postgresql:42.7.3")
