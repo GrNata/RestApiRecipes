@@ -8,5 +8,7 @@ data class RecipeDto (
     val baseServings: Int,
     val categoryValues: Map<String, CategoryValueDto>,
     val ingredients: List<IngredientWithAmountDto>,
-    val steps: List<String>
+    val steps: List<String>,
+
+    val totalCalories: Int?
 )

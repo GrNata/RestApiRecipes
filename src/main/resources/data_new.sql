@@ -64,15 +64,41 @@ INSERT INTO category_value (type_id, category_value) VALUES
 
 
 -- 6. Добавляем ингредиенты (без изменений)
-INSERT INTO ingredient (id, name) VALUES
-                                      (1, 'Картофель'),
-                                      (2, 'Морковь'),
-                                      (3, 'Свекла'),
-                                      (4, 'Мясо'),
-                                      (5, 'Яйца'),
-                                      (6, 'Мука'),
-                                      (7, 'Молоко'),
-                                      (8, 'Сахар');
+-- INSERT INTO ingredient (id, name, name_eng, energy_kcal_100g) VALUES
+--                                                                   (1, 'Картофель', 'potato', 77),
+--                                                                   (2, 'Морковь', 'carrot', 41),
+--                                                                   (3, 'Лук', 'onion', 40),
+--                                                                   (4, 'Сахар', 'sugar', 387),
+--                                                                   (5, 'Яйцо', 'egg', 155),
+                                                                  ;
+INSERT INTO ingredient (id, name, name_eng, energy_kcal_100g) VALUES
+                                      (1, 'Картофель', 'potato', 77),
+--                                       (1, 'Картофель', 'potato', 77),
+                                      (2, 'Морковь', 'carrot', 41),
+                                      (3, 'Свекла', 'beet', 42),
+                                      (4, 'Говядина', 'beef', 200),
+                                      (5, 'Яйцо', 'egg', 155),
+                                      (6, 'Мука пшеничная', 'wheat flour', 334),
+                                      (7, 'Молоко', 'milk', 40),
+                                      (8, 'Сахар', 'sugar', 387),
+                                      -- Новые продукты из pcsToGramMap
+                                      (9, 'Яблоко', 'apple', 52),
+                                      (10, 'Банан', 'banana', 89),
+                                      (11, 'Апельсин', 'orange', 47),
+                                      (12, 'Помидор', 'tomato', 18),
+                                      (13, 'Огурец', 'cucumber', 15),
+                                      (14, 'Лук репчатый', 'onion', 40),
+                                      (15, 'Чеснок (зубчик)', 'garlic clove', 149),
+                                      (16, 'Перец болгарский', 'bell pepper', 26),
+                                      (17, 'Баклажан', 'eggplant', 25),
+                                      (18, 'Кабачок', 'zucchini', 24),
+                                      (19, 'Лимон', 'lemon', 29),
+                                      (20, 'Груша', 'pear', 57),
+                                      (21, 'Киви', 'kiwi', 61),
+                                      (22, 'Авокадо', 'avocado', 160),
+                                      (23, 'Персик', 'peach', 39),
+                                      (24, 'Хлеб', 'bread slice', 265),
+                                      (25, 'Куриное филе', 'chicken fillet', 165);
 
 
 SELECT setval('ingredient_id_seq', (SELECT MAX(id) FROM ingredient));

@@ -79,8 +79,12 @@ CREATE TABLE recipe_category (
 -- 9. Таблица ингредиентов
 CREATE TABLE ingredient (
                             id BIGSERIAL PRIMARY KEY,
-                            name VARCHAR(255) NOT NULL UNIQUE
+                            name VARCHAR(255) NOT NULL UNIQUE,
+                            name_eng VARCHAR(255),
+                            energy_kcal_100g INTEGER
 );
+--  OFF ты будешь дергать по name_eng, индекс сильно ускорит fallback-логику
+CREATE INDEX idx_ingredient_name_eng ON ingredient(name_eng);
 
 -- 10. Таблица единиц измерения
 CREATE TABLE unit (

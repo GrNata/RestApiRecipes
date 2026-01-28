@@ -55,7 +55,11 @@ class IngredientController(
             } else {
                 ingredientRepository.findAll(pageable)
             }
-        return ingredients.map { IngredientDto(requireNotNull(it.id), it.name) }
+        return ingredients.map { IngredientDto(
+            requireNotNull(it.id), it.name,
+            requireNotNull(it.nameEng),
+            requireNotNull(it.energyKcal100g)
+        ) }
     }
 
     @Operation(summary = "Создать инградиент")

@@ -16,7 +16,8 @@ object RecipeMapper {
         fun toDto(
             recipe: Recipe,
             ingredients: List<RecipeIngredient>,
-            steps: List<CookingStep>
+            steps: List<CookingStep>,
+            totalCalories: Int?
         ): RecipeDto =
             RecipeDto(
                 id = recipe.id!!,
@@ -38,12 +39,16 @@ object RecipeMapper {
                     IngredientWithAmountDto(
                         id = requireNotNull(it.ingredient.id),
                         name = it.ingredient.name,
+                        nameEng = it.ingredient.nameEng,
+                        energyKcal100g = it.ingredient.energyKcal100g,
                         amount = it.amount,
                         unit = UnitDto(requireNotNull(it.unit.id), it.unit.code, it.unit.label)
                     )
                 },
 
-                steps = steps.map { it.description }
+                steps = steps.map { it.description },
+
+                totalCalories = totalCalories ?: null
             )
 
     fun Recipe.toIngredientWithAmountDto() : List<IngredientWithAmountDto> =
@@ -51,6 +56,8 @@ object RecipeMapper {
             IngredientWithAmountDto(
                 id = requireNotNull(ri.ingredient.id),
                 name = ri.ingredient.name,
+                nameEng = ri.ingredient.nameEng,
+                energyKcal100g = ri.ingredient.energyKcal100g,
                 amount = ri.amount,
                 unit = UnitDto(requireNotNull(ri.unit.id), ri.unit.code, ri.unit.label)
             )

@@ -3,8 +3,11 @@ package com.grig.restapirecipes.service
 import com.grig.restapirecipes.dto.request.CreateRecipeRequest
 import com.grig.restapirecipes.dto.response.RecipeDto
 import com.grig.restapirecipes.dto.request.UpdateRecipeRequest
+import com.grig.restapirecipes.dto.response.IngredientWithAmountDto
+import com.grig.restapirecipes.dto.response.UnitDto
 import com.grig.restapirecipes.exception.RecipeNotFoundException
 import com.grig.restapirecipes.mapper.RecipeMapper
+import com.grig.restapirecipes.mapper.UnitMapper
 import com.grig.restapirecipes.model.CookingStep
 import com.grig.restapirecipes.model.Recipe
 import com.grig.restapirecipes.model.RecipeIngredient
@@ -15,6 +18,7 @@ import com.grig.restapirecipes.repository.RecipeRepository
 import com.grig.restapirecipes.repository.StepRepository
 import com.grig.restapirecipes.repository.UnitRepository
 import com.grig.restapirecipes.repository.UserRepository
+import com.zaxxer.hikari.HikariDataSource
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Sort
 import org.springframework.data.domain.PageRequest
@@ -34,7 +38,8 @@ class RecipeService(
     private val categoryValueRepository: CategoryValueRepository,
     private val ingredientRepository: IngredientRepository,
     private val userRepository: UserRepository,
-    private val unitRepository: UnitRepository
+    private val unitRepository: UnitRepository,
+    private val nutritionService: NutritionService
 ) {
 
     @Transactional(readOnly = true)
@@ -44,7 +49,7 @@ class RecipeService(
         return recipesPage.map { recipe ->
             val ingredients = recipeIngredientRepository.findIngredients(requireNotNull(recipe.id))
             val steps = stepRepository.findSteps(requireNotNull(recipe.id))
-            RecipeMapper.toDto(recipe, ingredients, steps)
+            RecipeMapper.toDto(recipe, ingredients, steps, null)
         }
     }
 
@@ -54,7 +59,7 @@ class RecipeService(
 //            УБРАТЬ !!
             val ingredients = recipeIngredientRepository.findIngredients(recipe.id!!)
             val steps = stepRepository.findSteps(recipe.id!!)
-            RecipeMapper.toDto(recipe, ingredients, steps)
+            RecipeMapper.toDto(recipe, ingredients, steps, null)
         }
 
     fun getRecipeById(id: Long): RecipeDto {
@@ -64,7 +69,15 @@ class RecipeService(
         val ingredients = recipeIngredientRepository.findIngredients(id)
         val steps = stepRepository.findSteps(id)
 
-        return RecipeMapper.toDto(recipe, ingredients, steps)
+        println("Kcal_100: RecipeService: START calculeteTotalCalories")
+
+//        Вычисляем totalCalories
+        val totalCalories = calculeteTotalCalories(ingredients.toListIngredientsWithAmountDto())
+
+//        println("Kcal_100: RecipeService: calculeteTotalCalories, energyKcal100g = ${ingredients.forEach { it.ingredient.energyKcal100g }}")
+        println("Kcal_100: RecipeService: calculeteTotalCalories, totalCalories = ${totalCalories}")
+
+        return RecipeMapper.toDto(recipe, ingredients, steps, totalCalories)
     }
 
 // комбинационный поиск или название, или ингредиент, или все вместе
@@ -84,7 +97,7 @@ class RecipeService(
         return recipes.map { recipe ->
             val ingredients = recipeIngredientRepository.findIngredients(requireNotNull(recipe.id))
             val steps = stepRepository.findSteps(requireNotNull(recipe.id))
-            RecipeMapper.toDto(recipe, ingredients, steps)
+            RecipeMapper.toDto(recipe, ingredients, steps, null)
         }
     }
 
@@ -231,7 +244,7 @@ class RecipeService(
         return recipesPage.map { recipe ->
             val ingredients = recipeIngredientRepository.findIngredients(requireNotNull(recipe.id))
             val staps = stepRepository.findSteps(requireNotNull(recipe.id))
-            RecipeMapper.toDto(recipe, ingredients, staps)
+            RecipeMapper.toDto(recipe, ingredients, staps, null)
         }
     }
 
@@ -245,8 +258,45 @@ class RecipeService(
         return recipes.map { recipe ->
             val ingredients = recipeIngredientRepository.findIngredients(requireNotNull(recipe.id))
             val steps = stepRepository.findSteps(requireNotNull(recipe.id))
-            RecipeMapper.toDto(recipe, ingredients, steps)
+            RecipeMapper.toDto(recipe, ingredients, steps, null)
         }
     }
+
+    fun List<RecipeIngredient>.toListIngredientsWithAmountDto(): List<IngredientWithAmountDto> {
+        return this.map {
+            IngredientWithAmountDto(
+                it.ingredient.id,
+                it.ingredient.name,
+                it.ingredient.nameEng,
+                it.ingredient.energyKcal100g,
+                it.amount,
+                UnitDto(it.unit.id, it.unit.code, it.unit.label)
+            )
+        }
+    }
+
+//    // 🔹 Вычисляем totalCalories
+    fun calculeteTotalCalories(ingredientsWithAmountDto: List<IngredientWithAmountDto>) =
+
+        ingredientsWithAmountDto.sumOf { ingredient ->
+            val amount = ingredient.amount?.toDoubleOrNull() ?: 0.0
+
+
+            // берём калории напрямую
+            val calories = nutritionService.getCaloriesForIngredientWithAmountDto(ingredient) ?: 0
+
+            calories
+
+//            val kcal100 =
+//                ingredient.energyKcal100g ?: nutritionService.getCaloriesForIngredientWithAmountDto(ingredient)
+//            ingredient.energyKcal100g?.let { kcal100 ->
+//                nutritionService.calculateCaloriesForIngredient(
+//                    iningredientDto = ingredient,
+//                    amount = amount,
+//                    unit = ingredient.unit
+//                ) ?: 0
+//            } ?: 0
+
+        }
 
 }

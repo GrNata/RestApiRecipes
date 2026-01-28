@@ -19,22 +19,21 @@ class IngredientService(
     fun getAllingredients() : List<IngredientDto> =
         ingredientRepository.findAll()
             .map {
-                IngredientDto(requireNotNull(it.id), it.name)
+                IngredientDto(requireNotNull(it.id), it.name, it.nameEng, it.energyKcal100g)
             }
 
 
     fun getByIdIngredient(id: Long) : IngredientDto =
         ingredientRepository.findById(id)
             .map {
-                IngredientDto(requireNotNull(it.id), it.name)
+                IngredientDto(requireNotNull(it.id), it.name, it.nameEng, it.energyKcal100g)
             }
             .orElseThrow { RecipeNotFoundException("Ingredient with id ${id} not found.") }
 
 
     @PreAuthorize("hasRole('ADMIN')")
     fun createIngredient(request: IngredientRequest) : Ingredient {
-//        val ingredient = Ingredient(request.name, request.unit)
-        val ingredient = Ingredient(request.name)
+        val ingredient = Ingredient(request.name, request.nameEng, request.energyKcal100g)
         return ingredientRepository.save(ingredient)
     }
 
@@ -43,7 +42,8 @@ class IngredientService(
         val ingredient = ingredientRepository.findById(id)
             .orElseThrow { RecipeNotFoundException("Ingredient with id ${id} not found.") }
         ingredient.name = request.name
-//        ingredient.unit = request.unit
+        ingredient.nameEng = request.nameEng
+        ingredient.energyKcal100g = request.energyKcal100g
         return ingredientRepository.save(ingredient)
     }
 
@@ -53,4 +53,8 @@ class IngredientService(
             .orElseThrow { RecipeNotFoundException("Ingredient with id ${id} not found.") }
         ingredientRepository.delete(ingredient)
     }
+
+//    Это будет fallback, если OFF не ответил.
+    fun findByNameEngIgnoreCase(nameEng: String) =
+        ingredientRepository.findByNameEngIgnoreCase(nameEng)
 }

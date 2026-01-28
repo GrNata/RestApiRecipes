@@ -105,7 +105,8 @@ class RecipeController(
         val dto = recipeMapper.toDto(
             recipe = savedRecipe,
             ingredients = savedRecipe.recipeIngredients.toList(),
-            steps = savedRecipe.steps.toList()
+            steps = savedRecipe.steps.toList(),
+            totalCalories = null
         )
         return ResponseEntity.status(HttpStatus.CREATED).body(dto)
     }
@@ -121,7 +122,8 @@ class RecipeController(
         val dto = recipeMapper.toDto(
             recipe = updateRecipe,
             ingredients = updateRecipe.recipeIngredients.toList(),
-            steps = updateRecipe.steps.toList()
+            steps = updateRecipe.steps.toList(),
+            totalCalories = null
         )
         return ResponseEntity.ok(dto)
     }

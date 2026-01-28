@@ -55,6 +55,14 @@ dependencies {
     kapt("org.projectlombok:lombok")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+//    // Gson
+//    implementation("com.google.code.gson:gson:2.10.1")
+
+//    Если используешь старые версии Spring Boot / Netty, иногда нужно зависимость:
+//    Это загружает нативный DNS резолвер для Mac, но чаще помогает первый вариант (use-jdk-dns).
+//    implementation("io.netty:netty-resolver-dns-native-macos:4.1.103.Final")
+
 // -------------------------
     // Test dependencies
     // -------------------------
@@ -62,6 +70,9 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
+
+//    WebClient — это Spring WebFlux, даже если у тебя обычный MVC
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
 
     // Spring Security тесты
     testImplementation("org.springframework.security:spring-security-test")

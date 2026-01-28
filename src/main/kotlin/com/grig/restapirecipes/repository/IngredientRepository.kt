@@ -14,4 +14,6 @@ interface IngredientRepository : JpaRepository<Ingredient, Long> {
     // Пагинация и поиск по подстроке
 //    можем подгружать данные частями и фильтровать по части имени
     fun findByNameContainingIgnoreCase(name: String, pageable: Pageable) : Page<Ingredient>
+
+    fun findByNameEngIgnoreCase(nameEng: String): Ingredient?
 }

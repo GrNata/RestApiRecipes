@@ -18,11 +18,21 @@ class Ingredient(
     @Column(nullable = false)
     var name: String,
 
-//    @Column(nullable = false)
-//    var unit: String    //  кг, г, мл, шт, ст.л и т.д.
+    @Column(name = "name_eng")
+    var nameEng: String? = null,
+
+    @Column(name = "energy_kcal_100g")
+    var energyKcal100g: Int? = null,
+
 ) {
-    constructor(name: String): this(null, name) {
+    constructor(
+        name: String,
+        nameEng: String?,
+        energyKcal100g: Int?
+    ): this(null, name, nameEng, energyKcal100g) {
         this.name = name
+        this.nameEng = nameEng
+        this.energyKcal100g = energyKcal100g
     }
 //    {
 //    constructor(name: String, unit: String): this(null, name, unit) {

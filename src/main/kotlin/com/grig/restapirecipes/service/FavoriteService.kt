@@ -69,7 +69,8 @@ class FavoriteService(
             RecipeMapper.toDto(
                 it.recipe,
                 it.recipe.recipeIngredients.toList(),
-                it.recipe.steps
+                it.recipe.steps,
+                totalCalories = null
             )
         }
 
