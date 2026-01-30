@@ -26,7 +26,8 @@ CREATE TABLE users (
                        id BIGSERIAL PRIMARY KEY,
                        username VARCHAR(100) NOT NULL,
                        email VARCHAR(100) NOT NULL UNIQUE,
-                       password VARCHAR(255) NOT NULL
+                       password VARCHAR(255) NOT NULL,
+                       registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 3. Связь пользователь–роли (опционально)

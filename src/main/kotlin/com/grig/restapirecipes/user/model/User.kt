@@ -3,6 +3,7 @@ package com.grig.restapirecipes.user.model
 import jakarta.persistence.*
 import jakarta.validation.constraints.Email
 import org.hibernate.sql.results.graph.Fetch
+import java.time.LocalDateTime
 
 @Entity
 @Table(name = "users")
@@ -21,6 +22,9 @@ class User(
 
     @Column(nullable = false)
     var password: String,
+
+    @Column(name = "registration_date")
+    val registrationDate: LocalDateTime = LocalDateTime.now(),
 
     @ManyToMany
     @JoinTable(
