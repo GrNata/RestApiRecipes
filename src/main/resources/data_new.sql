@@ -1,8 +1,8 @@
 -- 1. Добавляем роли (без изменений)
 INSERT INTO roles (id, name) VALUES
-                                 (1, 'ROLE_ADMIN'),
-                                 (2, 'ROLE_USER'),
-                                 (3, 'ROLE_MODERATOR');
+                                 (1, 'ADMIN'),
+                                 (2, 'USER'),
+                                 (3, 'MODERATOR');
 
 
 -- 2. Добавляем пользователей (без изменений)

@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
@@ -31,53 +32,8 @@ class SecurityConfig (
     fun authenticationManager(config: AuthenticationConfiguration) : AuthenticationManager =
         config.authenticationManager
 
-
-//    @Bean
-//    fun filterChain(
-//        http: HttpSecurity,
-//        jwtAuthFilter: JwtAuthenticationFilter
-//    ): SecurityFilterChain {
-//
-//        http
-//            .csrf { it.disable() }
-//            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
-//            .authorizeHttpRequests { auth ->
-//                auth.requestMatchers(
-//                    "/api/auth/**",
-//                    "/v3/api-docs/**",
-//                    "/swagger-ui/**",
-////                    "/swagger-ui.html"
-//                ).permitAll()
-//                auth.requestMatchers(HttpMethod.GET, "/api/recipes/**").permitAll()
-//                auth.anyRequest().authenticated()
-//            }
-//            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
-//
-//        return http.build()
-//    }
-
-
-
-//    JWT-фильтр добавляй ТОЛЬКО если активен профиль prod в JwtAuthenticationFilter
-
-////    Оставляем БЕЗ JWT для unit-тестов:
-//    @Bean
-//    fun filterChain(http: HttpSecurity): SecurityFilterChain {
-//        http
-//            .csrf { it.disable() }
-//////            для консоли H2
-////            .headers { it.frameOptions { it.sameOrigin() } }
-////            .authorizeHttpRequests { auth ->
-////                auth.requestMatchers("/h2-console/**").permitAll()
-////                    .anyRequest().authenticated()
-////            }
-//            .authorizeHttpRequests {
-//                it.anyRequest().authenticated()
-//            }
-//            .httpBasic {}
-//
-//        return http.build()
-//    }
+    @Bean
+    fun userDetailsService(): UserDetailsService = customUserDetailsService
 
 //     которая объединяет все нужные правила
     @Bean

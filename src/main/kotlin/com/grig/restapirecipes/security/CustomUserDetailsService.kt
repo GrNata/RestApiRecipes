@@ -2,6 +2,7 @@ package com.grig.restapirecipes.security
 
 import com.grig.restapirecipes.repository.UserRepository
 import com.grig.restapirecipes.user.model.User
+import org.springframework.security.authentication.DisabledException
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
@@ -14,12 +15,16 @@ class CustomUserDetailsService(
 ) : UserDetailsService {
 
     override fun loadUserByUsername(email: String): UserDetails {
-//        val user: User = userRepository.findByEmail(email)
         val user: User = userRepository.findByEmailWithRoles(email)
             ?: throw UsernameNotFoundException("User not found with email: ${email}")
 
+        if (user.blocked) {
+            throw DisabledException("User is blocked")
+        }
+
         val authorities = user.roles.map {
-            SimpleGrantedAuthority(it.name)     // ROLE_USER / ROLE_ADMIN
+            SimpleGrantedAuthority("ROLE_${it.name}")     // ROLE_USER / ROLE_ADMIN
+//            SimpleGrantedAuthority(it.name)     // ROLE_USER / ROLE_ADMIN
         }
 
         return org.springframework.security.core.userdetails.User(

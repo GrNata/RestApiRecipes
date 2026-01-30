@@ -26,6 +26,9 @@ class User(
     @Column(name = "registration_date")
     val registrationDate: LocalDateTime = LocalDateTime.now(),
 
+    @Column(nullable = false)
+    var blocked: Boolean = false,
+
     @ManyToMany
     @JoinTable(
         name = "user_roles",

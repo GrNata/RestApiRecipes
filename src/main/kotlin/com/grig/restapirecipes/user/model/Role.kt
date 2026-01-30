@@ -11,6 +11,6 @@ class Role(
     val id: Long? = null,
 
     @Column(nullable = false, unique = true)
-    val name: String
+    val name: String    // ADMIN, USER, MODERATOR
 
 )
