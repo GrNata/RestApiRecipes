@@ -109,15 +109,16 @@ class RecipeService(
         val user = userRepository.findByEmailWithRoles(userEmail)
             ?: throw IllegalArgumentException("User not found: ${userEmail}")
 //            ?: throw AuthenticationCredentialsNotFoundException("User not found: ${userEmail}")
-
+        println("RECIPE: SERVICE Создание нового рецепта user: ${user}")
         val categoryValues = categoryValueRepository.findAllById(request.categoryValueIds).toMutableSet()
 //        val categories = categoryRepository.findAllById(request.categoryIds).toMutableSet()
-
+        println("RECIPE: SERVICE Создание нового рецепта categoryValues: ${categoryValues}")
 //        Проверку: 1 значение на 1 тип (Это защитит бизнес-логику)
         val dublicatedTypes = categoryValues.groupBy { it.categoryType.id }.filter { it.value.size > 1 }
         if (dublicatedTypes.isNotEmpty()) {
             throw IllegalArgumentException("Only one category per type is allowed")
         }
+        println("RECIPE: SERVICE Создание нового рецепта dublicatedTypes: ${dublicatedTypes}")
 
         val recipe = Recipe(
             name = request.name,
@@ -128,7 +129,9 @@ class RecipeService(
 //            categories = categories,
             createBy = user
         )
+        println("RECIPE: SERVICE Создание нового рецепта recipe: ${recipe}")
         recipeRepository.save(recipe)
+        println("RECIPE: SERVICE Создание нового рецепта AFTER SAVE recipe: ${recipe}")
 
         request.ingredients.forEach { dto ->
             val ingredient = ingredientRepository.findById(dto.ingredientId)
@@ -146,6 +149,7 @@ class RecipeService(
                 )
             )
         }
+        println("RECIPE: SERVICE Создание нового рецепта INGREDIENT recipe: ${recipe}")
          request.steps.forEachIndexed { index, step ->
              recipe.steps.add(
                  CookingStep(
@@ -155,6 +159,8 @@ class RecipeService(
                  )
              )
          }
+        println("RECIPE: SERVICE Создание нового рецепта STEPS recipe: ${recipe}")
+
         return recipeRepository.save(recipe)
     }
 
@@ -196,7 +202,6 @@ class RecipeService(
                 recipe.steps.add(CookingStep(recipe, index + 1, step))
             }
         }
-
             return recipeRepository.save(recipe)
         }
 

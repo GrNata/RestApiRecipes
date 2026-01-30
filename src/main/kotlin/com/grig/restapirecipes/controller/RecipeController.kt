@@ -96,18 +96,20 @@ class RecipeController(
     @ResponseStatus(HttpStatus.CREATED)
     fun createRecipe(@RequestBody @Valid request: CreateRecipeRequest) : ResponseEntity<RecipeDto> {
 
-        println("Создание нового рецепта request: ${request}")
+        println("RECIPE: CONTROLLER  Создание нового рецепта request: ${request}")
         val auth = SecurityContextHolder.getContext().authentication
-        println("Создание нового рецепта auth: ${auth}")
+        println("RECIPE: Создание нового рецепта auth: ${auth}")
 
         val userEmail = getCurrentUserEmail()
         val savedRecipe = recipeService.createRecipe(userEmail, request)
+        println("RECIPE: CONTROLLER Создание нового рецепта savedRecipe: ${savedRecipe}")
         val dto = recipeMapper.toDto(
             recipe = savedRecipe,
             ingredients = savedRecipe.recipeIngredients.toList(),
             steps = savedRecipe.steps.toList(),
             totalCalories = null
         )
+        println("RECIPE: CONTROLLER Создание нового рецепта dto: ${dto}")
         return ResponseEntity.status(HttpStatus.CREATED).body(dto)
     }
 

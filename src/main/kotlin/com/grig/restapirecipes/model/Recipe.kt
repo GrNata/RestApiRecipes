@@ -3,6 +3,7 @@ package com.grig.restapirecipes.model
 import com.grig.restapirecipes.user.model.User
 import jakarta.persistence.*
 import jakarta.validation.constraints.Min
+import jakarta.validation.constraints.NotNull
 
 @Entity
 @Table(name = "recipe")
@@ -23,6 +24,7 @@ class Recipe(
     var image: String? = null,
 
 //    кол-во порций
+    @NotNull
     @Min(1)
     @Column(name = "base_servings", nullable = false)
     var baseServings: Int = 1,
