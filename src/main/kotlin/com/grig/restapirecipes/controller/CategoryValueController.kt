@@ -2,6 +2,7 @@ package com.grig.restapirecipes.controller
 
 import com.grig.restapirecipes.dto.request.CategoryTypeRequest
 import com.grig.restapirecipes.dto.request.CategoryValueRequest
+import com.grig.restapirecipes.dto.request.CategoryValueRequestWithType
 import com.grig.restapirecipes.dto.response.CategoryTypeDto
 import com.grig.restapirecipes.dto.response.CategoryValueDto
 import com.grig.restapirecipes.service.CategoryValueService
@@ -40,13 +41,15 @@ class CategoryValueController(
     @Operation(summary = "Создать название категории")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun create(@Valid @RequestBody request: CategoryValueRequest): CategoryValueDto =
+//    fun create(@Valid @RequestBody request: CategoryValueRequest): CategoryValueDto =
+    fun create(@Valid @RequestBody request: CategoryValueRequestWithType): CategoryValueDto =
         categoryValueService.createCategoryValue(request)
 
     @Operation(summary = "Редактировать название категории")
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    fun update(@PathVariable id: Long, @Valid @RequestBody request: CategoryValueRequest): CategoryValueDto =
+//    fun update(@PathVariable id: Long, @Valid @RequestBody request: CategoryValueRequest): CategoryValueDto =
+    fun update(@PathVariable id: Long, @Valid @RequestBody request: CategoryValueRequestWithType): CategoryValueDto =
         categoryValueService.updateCategoryValue(id, request)
 
     @Operation(summary = "Удалить название категории")

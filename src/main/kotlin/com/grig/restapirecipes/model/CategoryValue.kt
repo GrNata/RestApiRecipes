@@ -24,5 +24,4 @@ class CategoryValue(
 
     @Column(nullable = false)
     var categoryValue: String  // "салат", "итальянская", "вегетарианское", "летнее"
-
 )

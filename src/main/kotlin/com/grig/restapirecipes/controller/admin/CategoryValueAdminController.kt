@@ -1,6 +1,8 @@
 package com.grig.restapirecipes.controller.admin
 
 import com.grig.restapirecipes.dto.request.CategoryValueRequest
+import com.grig.restapirecipes.dto.request.CategoryValueRequestWithType
+import com.grig.restapirecipes.dto.response.CategoryValueDto
 import com.grig.restapirecipes.service.CategoryValueService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -27,13 +29,22 @@ class CategoryValueAdminController(
 
     @Operation(summary = "ADMIN - Создать название категории")
     @PostMapping
-    fun createCategoryValue(@RequestBody request: CategoryValueRequest) =
-        categoryValueService.createCategoryValue(request)
+//    fun createCategoryValue(@RequestBody request: CategoryValueRequest) {
+    fun createCategoryValue(@RequestBody request: CategoryValueRequestWithType) : CategoryValueDto {
+        println("ADMIN: CONTROLLER request: $request")
+        val response = categoryValueService.createCategoryValue(request)
+        println("ADMIN: CONTROLLER responseCR: $response")
+        return response
+    }
 
     @Operation(summary = "ADMIN - Редактировать название категории")
     @PutMapping("/{id}")
-    fun updateCategoryValue(@PathVariable id : Long, @RequestBody request: CategoryValueRequest) =
-        categoryValueService.updateCategoryValue(id, request)
+//    fun updateCategoryValue(@PathVariable id : Long, @RequestBody request: CategoryValueRequest) =
+    fun updateCategoryValue(@PathVariable id : Long, @RequestBody request: CategoryValueRequestWithType) : CategoryValueDto {
+        val response = categoryValueService.updateCategoryValue(id, request)
+        println("ADMIN: CONTROLLER responseUP: $response")
+        return response
+    }
 
     @Operation(summary = "ADMIN - Удалить название категории")
     @DeleteMapping("/{id}")

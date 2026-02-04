@@ -2,6 +2,7 @@ package com.grig.restapirecipes.service
 
 import com.grig.restapirecipes.dto.request.CategoryTypeRequest
 import com.grig.restapirecipes.dto.request.CategoryValueRequest
+import com.grig.restapirecipes.dto.request.CategoryValueRequestWithType
 import com.grig.restapirecipes.dto.response.CategoryValueDto
 import com.grig.restapirecipes.exception.RecipeNotFoundException
 import com.grig.restapirecipes.model.CategoryType
@@ -38,9 +39,14 @@ class CategoryValueService(
         }.orElseThrow { RecipeNotFoundException("CategoryValue with id ${id} not found.") }
 
     @PreAuthorize("hasRole('ADMIN')")
-    fun createCategoryValue(request: CategoryValueRequest) : CategoryValueDto {
-        val type = categoryTypeRepository.findById(request.categoryTypeId)
+//    fun createCategoryValue(request: CategoryValueRequest) : CategoryValueDto {
+    fun createCategoryValue(request: CategoryValueRequestWithType) : CategoryValueDto {
+        println("ADMIN: SERVICE request: $request")
+        val type = categoryTypeRepository.findById(request.typeId)
             .orElseThrow { RecipeNotFoundException("CategoryType not found")}
+//        val type = categoryTypeRepository.findById(request.categoryTypeId)
+//            .orElseThrow { RecipeNotFoundException("CategoryType not found")}
+        println("ADMIN: SERVICE type: ${type.nameType}")
         val categoryValue = CategoryValue(
             categoryType = type,
             categoryValue = request.categoryValue
@@ -56,12 +62,17 @@ class CategoryValueService(
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    fun updateCategoryValue(id: Long, request: CategoryValueRequest) : CategoryValueDto {
+//    fun updateCategoryValue(id: Long, request: CategoryValueRequest) : CategoryValueDto {
+    fun updateCategoryValue(id: Long, request: CategoryValueRequestWithType) : CategoryValueDto {
+        println("ADMIN: SERVICE request: ${request}")
         val categoryValue = categoryValueRepository.findById(id)
             .orElseThrow { RecipeNotFoundException("CategoryValue with id ${id} not found.") }
-
-        val type = categoryTypeRepository.findById(request.categoryTypeId)
+        println("ADMIN: SERVICE categoryValue: ${categoryValue.categoryValue}")
+        val type = categoryTypeRepository.findById(request.typeId)
             .orElseThrow { RecipeNotFoundException("CategoryType not found")}
+//        val type = categoryTypeRepository.findById(request.categoryTypeId)
+//            .orElseThrow { RecipeNotFoundException("CategoryType not found")}
+        println("ADMIN: SERVICE type: ${type.nameType}")
 
         categoryValue.categoryType = type
         categoryValue.categoryValue = request.categoryValue
