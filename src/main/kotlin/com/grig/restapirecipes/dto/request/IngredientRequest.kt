@@ -6,6 +6,5 @@ import jakarta.validation.constraints.NotBlank
 data class IngredientRequest(
     @field:NotBlank val name: String,
     val nameEng: String?,
-//    @field:NotBlank val unit: String,
     val energyKcal100g: Int?
 )

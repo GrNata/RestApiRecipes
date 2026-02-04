@@ -14,8 +14,8 @@ class UserService(
     private val roleRepository: RoleRepository
 ) {
     @Transactional(readOnly = true)
-    fun getAllUsers() : List<UserDto> =
-        userRepository.findAll().map { user ->
+    fun getAllUsers() : List<UserDto> {
+        val users = userRepository.findAll().map { user ->
             UserDto(
                 id = user.id,
                 username = user.username,
@@ -25,6 +25,12 @@ class UserService(
                 blocked = user.blocked
             )
         }
+
+        println("ADMIN: users: $users")
+
+        return users
+    }
+
     @Transactional
     fun blockUser(userId: Long, blocked: Boolean) {
         val user = userRepository.findById(userId)

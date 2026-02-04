@@ -15,6 +15,7 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.*
 import javax.crypto.SecretKey
+import kotlin.collections.emptyList
 
 @Component
 class JwtTokenProvider(
@@ -58,37 +59,13 @@ class JwtTokenProvider(
             .signWith(key, SignatureAlgorithm.HS256)
             .compact()
     }
-//    fun generateToken(user: User): String {
-//        val roles = user.roles.map { it.name }
-//
-//        return Jwts.builder()
-//            .setSubject(user.email)
-//            .claim("roles", roles)
-//            .setIssuedAt(Date())
-//            .setExpiration(Date(System.currentTimeMillis() + jwtExpirationInMs))
-//            .signWith(key, SignatureAlgorithm.HS512)
-//            .compact()
-//    }
+
 
     fun getEmailFromJWT(token: String): String =
         Jwts.parserBuilder().setSigningKey(key).build()
             .parseClaimsJws(token)
             .body.subject
 
-//    //    Временно для отладки
-//    fun validateToken(token: String): Boolean {
-//        try {
-//            val claims = Jwts.parserBuilder()
-//                .setSigningKey(key)
-//                .build()
-//                .parseClaimsJws(token)
-//            println("validateToken: success claims=${claims.body}")
-//            return true
-//        } catch (ex: Exception) {
-//            println("validateToken: failed ex=$ex")
-//            return false
-//        }
-//    }
     fun validateToken(token: String): Boolean =
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token)
@@ -97,6 +74,29 @@ class JwtTokenProvider(
             println("validateToken: failed ex=$ex")
             false
         }
+
+    fun getRolesFromJWT(token: String): Set<String> {
+        return try {
+            val claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .body
+
+            // Получаем claim "roles" как список строк
+    //            val roles: List<String> = (claims.get("roles", List::class.java) as? List<String> ?: emptyList()
+            val rawRoles = claims.get("roles", List::class.java) ?: null
+            val roles: List<String> = rawRoles?.let { it.map { it.toString() } } ?: emptyList()
+
+            println("ADMIN: getRolesFromJWT - roles: $roles")
+
+            return roles.toSet()
+
+        } catch (e: Exception) {
+            throw RuntimeException("Ошибка (получение ролей) при разборе JWT: ${e.message}")
+        }
+    }
+
 
 //  •	subject — обычно ID пользователя.
 //	•	claim — дополнительные данные, которые хочешь закодировать в JWT.
@@ -128,5 +128,7 @@ class JwtTokenProvider(
             expiryDate = expiryDate
         )
     }
+
+
 
 }

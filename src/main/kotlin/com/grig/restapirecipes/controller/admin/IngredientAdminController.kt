@@ -28,8 +28,12 @@ class IngredientAdminController(
         ingredientService.createIngredient(request)
 
     @PutMapping("/{id}")
-    fun update(@PathVariable id: Long, @RequestBody request: IngredientRequest) =
+    fun update(@PathVariable id: Long, @RequestBody request: IngredientRequest) {
+        println("ADMIN: IngredientAdminController: START")
+        println("ADMIN: IngredientAdminController: id=$id,  request: $request")
+
         ingredientService.updateIngredient(id, request)
+    }
 
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: Long) = ingredientService.deleteIngredient(id)

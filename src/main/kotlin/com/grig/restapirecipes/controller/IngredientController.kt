@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 
@@ -28,7 +29,21 @@ class IngredientController(
 
     @Operation(summary = "Получить инградиент по id")
     @GetMapping("/{id}")
-    fun getById(id: Long) : IngredientDto = ingredientService.getByIdIngredient(id)
+//    fun getById(id: Long?) : IngredientDto {
+    fun getById(@PathVariable("id") id: Long?) : ResponseEntity<IngredientDto> {
+
+        println("ADMIN: START getByIdIngredient")
+
+        if (id == null) return ResponseEntity.badRequest().build()
+
+        println("ADMIN: id=$id")
+
+        val response = ingredientService.getByIdIngredient(id)
+
+        println("ADMIN: id=$id, ingredient: $response")
+        return ResponseEntity.ok(response)
+//        return response
+    }
 
 
 //    с пагинацией, сортировкой и фильтром

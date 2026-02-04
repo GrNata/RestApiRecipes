@@ -39,12 +39,22 @@ class IngredientService(
 
     @PreAuthorize("hasRole('ADMIN')")
     fun updateIngredient(id: Long, request: IngredientRequest) : Ingredient {
+
+        println("ADMIN: IngredientService: id=$id,  request: $request")
+
         val ingredient = ingredientRepository.findById(id)
             .orElseThrow { RecipeNotFoundException("Ingredient with id ${id} not found.") }
+
+        println("ADMIN: IngredientService: findById,  ingredient: $ingredient")
+
         ingredient.name = request.name
         ingredient.nameEng = request.nameEng
         ingredient.energyKcal100g = request.energyKcal100g
-        return ingredientRepository.save(ingredient)
+
+        val response = ingredientRepository.save(ingredient)
+
+        println("ADMIN: IngredientService: response: $response")
+        return response
     }
 
     @PreAuthorize("hasRole('ADMIN')")

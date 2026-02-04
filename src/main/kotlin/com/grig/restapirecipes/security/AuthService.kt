@@ -8,6 +8,7 @@ import com.grig.restapirecipes.dto.user.response.AuthResponse
 import com.grig.restapirecipes.repository.RefreshTokenRepository
 import com.grig.restapirecipes.repository.RoleRepository
 import com.grig.restapirecipes.repository.UserRepository
+import com.grig.restapirecipes.user.dto.UserInfoDto
 import com.grig.restapirecipes.user.model.User
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -101,8 +102,8 @@ class AuthService(
 
         return TokenResponse(
             accessToken = accessToken,
-            refreshToken = refreshToken.token
-
+            refreshToken = refreshToken.token,
+            userInfo = UserInfoDto(user.email, user.roles.map { it.name }.toSet())
         )
     }
 
@@ -130,7 +131,8 @@ class AuthService(
 
         return TokenResponse(
             newAccessToken,
-            newRefreshToken.token
+            newRefreshToken.token,
+            userInfo = UserInfoDto(user.email, user.roles.map { it.name }.toSet())
         )
     }
 
